@@ -1,0 +1,54 @@
+Initialize engine version: 5.4.1f1 (649f48bbbf0f)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: Intel(R) HD Graphics Family (ID=0xa16)
+    Vendor:   Intel
+    VRAM:     1792 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\Tobii.EyeX.Client.Net20.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\Tobii.EyeX.Client.Net20.dll into Unity Child Domain
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\Tobii.EyeX.Client.Net20.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\Tobii.EyeX.Client.Net20.dll into Unity Child Domain
+- Completed reload, in  0.619 seconds
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\System.dll (this message is harmless)
+desktop: 2160x1440 59Hz; virtual: 2160x1440 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 3.498694 ms
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/Tobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/.\Tobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/Tobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/Tobii.EyeX.Client
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/.\Tobii.EyeX.Client
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/Tobii.EyeX.Client
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/libTobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/.\libTobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/libTobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/Tobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/.\Tobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/Tobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/Tobii.EyeX.Client
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/.\Tobii.EyeX.Client
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/Tobii.EyeX.Client
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/libTobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/.\libTobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/libTobii.EyeX.Client.dll
+Tobii EyeTracking initialization failed because the client access library 'Tobii.EyeX.Client.dll' could not be loaded. Please make sure that it is present in the root directory of the game/application.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 2734 -> priority: 1 
