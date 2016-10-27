@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Tobii.EyeTracking;
+using UnityEngine.UI;
 
 public class GM_CubeControl : MonoBehaviour
 {
@@ -20,6 +21,9 @@ public class GM_CubeControl : MonoBehaviour
 
     private GazeAware _gazeAware_sp1, _gazeAware_sp2, _gazeAware_sp3;
     GazePoint gazePoint_sp1, gazePoint_sp2, gazePoint_sp3;
+
+    GameObject home;
+    Text hp_label, hp_text;
 
     // Use this for initialization
     void Start()
@@ -53,6 +57,10 @@ public class GM_CubeControl : MonoBehaviour
         _gazeAware_sp1 = sphereL.GetComponent<GazeAware>();
         _gazeAware_sp2 = sphereM.GetComponent<GazeAware>();
         _gazeAware_sp3 = sphereR.GetComponent<GazeAware>();
+
+        home = GameObject.Find("Home");
+        hp_label = GameObject.Find("HP_Label_Text").GetComponent<Text>();
+        hp_text = GameObject.Find("HP_Text").GetComponent<Text>();
     }
 
     // Update is called once per frame
@@ -165,6 +173,12 @@ public class GM_CubeControl : MonoBehaviour
             cube.GetComponent<Renderer>().material = materials[1];
         }
 
+    }
+
+    void EndGame()
+    {
+        hp_label.text = "Game Over";
+        hp_text.text = "0";
     }
 
     IEnumerator TargetOn()
