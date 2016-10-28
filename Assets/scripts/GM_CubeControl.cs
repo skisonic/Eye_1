@@ -22,7 +22,7 @@ public class GM_CubeControl : MonoBehaviour
     private GazeAware _gazeAware_sp1, _gazeAware_sp2, _gazeAware_sp3;
     GazePoint gazePoint_sp1, gazePoint_sp2, gazePoint_sp3;
 
-    GameObject home;
+    GameObject home, spawner;
     Text hp_label, hp_text;
 
     // Use this for initialization
@@ -61,6 +61,7 @@ public class GM_CubeControl : MonoBehaviour
         home = GameObject.Find("Home");
         hp_label = GameObject.Find("HP_Label_Text").GetComponent<Text>();
         hp_text = GameObject.Find("HP_Text").GetComponent<Text>();
+        spawner = GameObject.Find("Spawner");
     }
 
     // Update is called once per frame
@@ -104,7 +105,7 @@ public class GM_CubeControl : MonoBehaviour
 
         if (sphereL.GetComponent<GazeAware>().HasGazeFocus)
         {
-            Debug.Log("found it");
+            //Debug.Log("found it");
             //gazePoint_sp1 = EyeTracking.GetGazePoint();
             //transform.Rotate(Vector3.forward);
             cube.transform.Rotate(Vector3.right);
@@ -121,7 +122,7 @@ public class GM_CubeControl : MonoBehaviour
 
         if (_gazeAware_sp1.HasGazeFocus)
         {
-            Debug.Log("found it");
+            //Debug.Log("found it");
             //gazePoint_sp1 = EyeTracking.GetGazePoint();
             //transform.Rotate(Vector3.forward);
             cube.transform.Rotate(Vector3.forward);
@@ -135,7 +136,7 @@ public class GM_CubeControl : MonoBehaviour
 
         if (_gazeAware_sp2.HasGazeFocus)
         {
-            Debug.Log("found it");
+            //Debug.Log("found it");
             //gazePoint_sp1 = EyeTracking.GetGazePoint();
             //transform.Rotate(Vector3.forward);
             cube.transform.Rotate(Vector3.right);
@@ -150,7 +151,7 @@ public class GM_CubeControl : MonoBehaviour
 
         if (_gazeAware_sp3.HasGazeFocus)
         {
-            Debug.Log("found it");
+            //Debug.Log("found it");
             //gazePoint_sp1 = EyeTracking.GetGazePoint();
             //transform.Rotate(Vector3.forward);
             cube.transform.Rotate(Vector3.down);
@@ -173,12 +174,37 @@ public class GM_CubeControl : MonoBehaviour
             cube.GetComponent<Renderer>().material = materials[1];
         }
 
+        if (Input.GetKeyDown(KeyCode.Home))
+        {
+            ResetGame();
+        }
+
     }
 
-    void EndGame()
+    public void EndGame()
     {
-        hp_label.text = "Game Over";
+        spawner.GetComponent<SpawnEnemies>().enabled = false;
+        sphereL.GetComponent<RotateCannon>().enabled = false;
+        //sphereR.GetComponent<RotateCannon>().enabled = false;
+        hp_label.text = "Game\nOver";
         hp_text.text = "0";
+        home.GetComponent<TakeDamage>().enabled = false;
+    }
+
+    public void ResetGame()
+    {
+        
+        spawner.GetComponent<SpawnEnemies>().enabled = true;
+        sphereL.GetComponent<RotateCannon>().enabled = true;
+        //sphereR.GetComponent<RotateCannon>().enabled = false;
+        home.GetComponent<TakeDamage>().enabled = enabled;
+        home.GetComponent<TakeDamage>().hp = home.GetComponent<TakeDamage>().max_hp;
+        hp_label.text = "HP";
+        hp_text.text = home.GetComponent<TakeDamage>().hp.ToString();
+        foreach(GameObject enemy_cube in (GameObject.FindGameObjectsWithTag("Enemy_Cube")))
+        {
+            Destroy(enemy_cube);
+        }
     }
 
     IEnumerator TargetOn()
@@ -193,3 +219,4 @@ public class GM_CubeControl : MonoBehaviour
         yield return null;
     }
 }
+    

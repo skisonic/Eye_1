@@ -5,9 +5,11 @@ using Tobii.EyeTracking;
 public class FireCannonOnGaze : MonoBehaviour
 {
     private GazeAware _gazeAware;
+    private GazeAware _gazeAwareL, _gazeAwareR;
     public GameObject bullet_pf;
     GameObject cannon;
     GameObject cannonL, cannonR;
+    GameObject sphereL, sphereR;
     GazePoint gazePoint;
 
     GameObject bullet;
@@ -15,13 +17,16 @@ public class FireCannonOnGaze : MonoBehaviour
     void Start()
     {
         _gazeAware = GetComponent<GazeAware>();
+
         cannonL = GameObject.Find("CannonL");
+        _gazeAwareL = cannonL.GetComponentInParent<GazeAware>();
         cannonR = GameObject.Find("CannonR");
+        _gazeAwareR = cannonR.GetComponentInParent<GazeAware>();
     }
 
     void Update()
     {
-        if ((_gazeAware.HasGazeFocus && gameObject.name == "SphereL" && Input.GetKey(KeyCode.Space)) || Input.GetKeyDown(KeyCode.Alpha1))
+        if ((_gazeAwareL.HasGazeFocus && gameObject.name == "SphereL" && Input.GetKey(KeyCode.Space)) || Input.GetKeyDown(KeyCode.Alpha1))
         {
             //Vector3 shotPath = Vector3.Distance(gameObject.transform.position, cannon.transform.position);
             bullet = Instantiate(bullet_pf, cannonL.transform.position, Quaternion.Euler(new Vector3(0, 0, 90f + transform.localRotation.z * 90.0f))) as GameObject;
@@ -31,7 +36,7 @@ public class FireCannonOnGaze : MonoBehaviour
             //gazePoint = EyeTracking.GetGazePoint();
             //Debug.Log("found it");
         }
-        else if ((_gazeAware.HasGazeFocus && gameObject.name == "SphereR" && Input.GetKey(KeyCode.Space)) || Input.GetKeyDown(KeyCode.Alpha0))
+        else if ((_gazeAwareR.HasGazeFocus && gameObject.name == "SphereR" && Input.GetKey(KeyCode.Space)) || Input.GetKeyDown(KeyCode.Alpha0))
         {
             //Vector3 shotPath = Vector3.Distance(gameObject.transform.position, cannon.transform.position);
             bullet = Instantiate(bullet_pf, cannonR.transform.position, Quaternion.Euler(new Vector3(0,0,90.0f + transform.localRotation.z * 90.0f))) as GameObject;

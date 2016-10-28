@@ -4,37 +4,56 @@ using UnityEngine.UI;
 public class TakeDamage : MonoBehaviour {
 
     Text hp_label, hp_text;
-    int hp;
+    public int hp, max_hp;
     float shrinkDmg_wait;
     bool shrinkWait;
 
     GameObject gm;
-
+    const int MAX_HP = 1;
 	// Use this for initialization
 	void Start () {
         hp_label = GameObject.Find("HP_Label_Text").GetComponent<Text>();
         hp_text = GameObject.Find("HP_Text").GetComponent<Text>();
-        hp = 3;
+        hp = MAX_HP;
+        max_hp = MAX_HP;
+        hp_text.color = Color.green;
         shrinkDmg_wait = 3.0f;
         shrinkWait = false;
+
+        gm = GameObject.Find("GM_CubeControl");
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (hp >= 0)
+        hp_text.text = hp.ToString();
+        if (hp > 0)
         {
-            hp_text.text = hp.ToString();
+
+            if (hp < MAX_HP && hp >= MAX_HP / 1.7f)
+            {
+                hp_text.color = Color.yellow;
+            }
+            else if (hp < MAX_HP / 1.7f && hp >= MAX_HP / 3.4f)
+            {
+                hp_text.color = Color.yellow;
+            }
+            else if (hp < MAX_HP / 3.4f)
+            {
+                hp_text.color = Color.red;
+            }
+            if (transform.localScale.x < 0.25f && !shrinkWait)
+            {
+                hp--;
+                StartCoroutine(ShrinkWaitPeriod());
+            }
         }
         else
         {
-            hp_label.text = "Game Over";
-            hp_text.text = "0";
+            //endgame
+            gm.GetComponent<GM_CubeControl>().EndGame();
         }
-        if (transform.localScale.x < 0.25f && !shrinkWait)
-        {
-            hp--;
-            StartCoroutine(ShrinkWaitPeriod());
-        }
+
+
     }
 
     void OnCollisionEnter(Collision coll)
@@ -43,6 +62,11 @@ public class TakeDamage : MonoBehaviour {
         {
             hp--;
         }
+    }
+
+    public void ReceiveDamage(int dmg)
+    {
+        hp -= dmg;
     }
 
     IEnumerator ShrinkWaitPeriod()
