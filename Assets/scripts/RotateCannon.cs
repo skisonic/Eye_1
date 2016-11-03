@@ -1,6 +1,10 @@
 ﻿using UnityEngine; 
 using System.Collections;
 
+
+/// <summary>
+///  Rotates Cannons automatically automatically. Requires rewriting, is NOT modular. Uses direct calls.
+/// </summary>
 public class RotateCannon : MonoBehaviour {
 
 

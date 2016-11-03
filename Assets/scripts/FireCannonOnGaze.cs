@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using Tobii.EyeTracking;
 
+
+/// <summary>
+/// Fire gaze aware cannons. uses direct calls. needs rewrite. 
+/// -ski 
+/// </summary>
 [RequireComponent(typeof(GazeAware))]
 public class FireCannonOnGaze : MonoBehaviour
 {

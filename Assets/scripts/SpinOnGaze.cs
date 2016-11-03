@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using Tobii.EyeTracking;
 
+
+/// <summary>
+/// Gaze aware component spins on gaze.  duh
+/// -ski 
+/// </summary>
 [RequireComponent(typeof(GazeAware))]
 public class SpinOnGaze : MonoBehaviour
 {

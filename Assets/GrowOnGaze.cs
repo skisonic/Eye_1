@@ -3,6 +3,10 @@ using System.Collections;
 using Tobii.EyeTracking;
 
 
+/// <summary>
+/// Gaze aware component grows on gaze.  duh
+/// -ski 
+/// </summary>
 [RequireComponent(typeof(GazeAware))]
 public class GrowOnGaze : MonoBehaviour
 {
