@@ -10,8 +10,13 @@ public class TakeDamage : MonoBehaviour {
 
     GameObject gm;
     const int MAX_HP = 1;
+
+    int prototype_var; //0 = cube, 1 = cannons
 	// Use this for initialization
 	void Start () {
+
+        prototype_var = 1;
+
         hp_label = GameObject.Find("HP_Label_Text").GetComponent<Text>();
         hp_text = GameObject.Find("HP_Text").GetComponent<Text>();
         hp = MAX_HP;
@@ -20,7 +25,14 @@ public class TakeDamage : MonoBehaviour {
         shrinkDmg_wait = 3.0f;
         shrinkWait = false;
 
-        gm = GameObject.Find("GM_CubeControl");
+        if (prototype_var == 0)
+        {
+            gm = GameObject.Find("GM_CubeControl");
+        }
+        else if (prototype_var == 1)
+        {
+            gm = GameObject.Find("GM_Cannons");
+        }
     }
 	
 	// Update is called once per frame
@@ -50,7 +62,14 @@ public class TakeDamage : MonoBehaviour {
         else
         {
             //endgame
-            gm.GetComponent<GM_CubeControl>().EndGame();
+            if (prototype_var == 0)
+            {
+                //gm.GetComponent<GM_CubeControl>().EndGame();
+            }
+            else if (prototype_var == 1)
+            {
+                gm.GetComponent<GM_Cannons>().EndGame();
+            }
         }
 
 

@@ -23,21 +23,51 @@ public class AimCannonWithGaze : MonoBehaviour {
     Vector3 gazePoint3;
 
     GameObject bullet;
+    int aim_interval;
+    const int AIM_INT = 10;
 
     void Start()
     {
         _gazeAware = GetComponent<GazeAware>();
+        aim_interval = AIM_INT;
     }
 
     // Update is called once per frame
     void Update () {
+
         if (_gazeAware.HasGazeFocus)
         {
+            aim_interval--;
             gazePoint = EyeTracking.GetGazePoint();
             gazePoint3 = new Vector3(gazePoint.Viewport.x, gazePoint.Viewport.y, 0);
 
-            gameObject.transform.Rotate(Vector3.forward, Vector3.Angle(gameObject.transform.position, gazePoint3));
+            if (aim_interval == 0)
+            {
+                gameObject.transform.Rotate(Vector3.forward, Vector3.Angle(gameObject.transform.position, gazePoint3));
+
+                Vector3 targetDir = gameObject.transform.position - gazePoint3;
+                float angle = Vector3.Angle(targetDir, transform.forward);
+
+                Debug.Log("game object posisiton " + gameObject.transform.position + "gazepoint position " + gazePoint3 + Vector3.Angle(gameObject.transform.position, gazePoint3));
+                Debug.Log("Corrected? " + angle);
+                aim_interval = AIM_INT;
+            }
             //Debug.Log("found it");
+        }
+    }
+
+    void FixedUpdate()
+    {
+        Vector3 fwd = transform.TransformDirection(Vector3.forward);
+        Vector3 targetDir = gazePoint3 - gameObject.transform.position;
+        RaycastHit hit;
+
+        Physics.Raycast(transform.position, targetDir, out hit, 10);
+        Debug.DrawLine(transform.position, targetDir);
+        if (Physics.Raycast(transform.position, targetDir, out hit, 10))
+        {
+            print("There is something in front of the object!");
+            Debug.Log("roenoen " + hit.transform.name);
         }
     }
 }
