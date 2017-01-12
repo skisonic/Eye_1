@@ -3,7 +3,7 @@ using Tobii.EyeTracking;
 
 
 /// <summary>
-/// Fire gaze aware cannons. uses direct calls. needs rewrite. 
+/// Fire gaze aware cannons with keyboard inputs        . uses direct calls. needs rewrite. 
 /// -ski 
 /// </summary>
 [RequireComponent(typeof(GazeAware))]
@@ -31,7 +31,7 @@ public class FireCannonOnGaze : MonoBehaviour
 
     void Update()
     {
-        if ((_gazeAwareL.HasGazeFocus && gameObject.name == "SphereL" && Input.GetKey(KeyCode.Space)) || Input.GetKeyDown(KeyCode.Alpha1))
+        if ((_gazeAwareL.HasGazeFocus && gameObject.name == "SphereL" && Input.GetKey(KeyCode.Space)) || Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha8))
         {
             //Vector3 shotPath = Vector3.Distance(gameObject.transform.position, cannon.transform.position);
             bullet = Instantiate(bullet_pf, cannonL.transform.position, Quaternion.Euler(new Vector3(0, 0, 90f + transform.localRotation.z * 90.0f))) as GameObject;

@@ -17,7 +17,7 @@ public class AimCannonWithGaze : MonoBehaviour {
 
     private GazeAware _gazeAware;
     public GameObject bullet_pf;
-    GameObject cannon;
+    public GameObject cannon;
     GameObject sphereL, sphereR;
     GazePoint gazePoint;
     Vector3 gazePoint3;
@@ -25,15 +25,20 @@ public class AimCannonWithGaze : MonoBehaviour {
     GameObject bullet;
     int aim_interval;
     const int AIM_INT = 10;
+    float start_time,current_time;
 
     void Start()
     {
         _gazeAware = GetComponent<GazeAware>();
         aim_interval = AIM_INT;
+        start_time = Time.time;
+        current_time = Time.time;
     }
 
     // Update is called once per frame
     void Update () {
+
+        current_time = Time.time;
 
         if (_gazeAware.HasGazeFocus)
         {
@@ -54,20 +59,27 @@ public class AimCannonWithGaze : MonoBehaviour {
             }
             //Debug.Log("found it");
         }
+
+        if (current_time >= start_time + 10.0f)
+        {
+            aim_interval--;
+            start_time = Time.time;
+            Debug.Log("aim _interval = " + aim_interval);
+        }
     }
 
     void FixedUpdate()
     {
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
+        //Vector3 targetDir = gazePoint3 - gameObject.transform.position;
         Vector3 targetDir = gazePoint3 - gameObject.transform.position;
         RaycastHit hit;
 
-        Physics.Raycast(transform.position, targetDir, out hit, 10);
-        Debug.DrawLine(transform.position, targetDir);
-        if (Physics.Raycast(transform.position, targetDir, out hit, 10))
+        Physics.Raycast(cannon.transform.position, targetDir, out hit, 10);
+        Debug.DrawLine(cannon.transform.position, targetDir);
+        if (Physics.Raycast(cannon.transform.position, targetDir, out hit, 10))
         {
-            print("There is something in front of the object!");
-            Debug.Log("roenoen " + hit.transform.name);
+            //Debug.Log("There is something in front of the object!" + hit.transform.name);
         }
     }
 }

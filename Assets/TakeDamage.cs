@@ -9,7 +9,7 @@ public class TakeDamage : MonoBehaviour {
     bool shrinkWait;
 
     GameObject gm;
-    const int MAX_HP = 1;
+    const int MAX_HP = 5;
 
     int prototype_var; //0 = cube, 1 = cannons
 	// Use this for initialization
