@@ -3,7 +3,7 @@ using Tobii.EyeTracking;
 
 
 /// <summary>
-/// Gaze aware component spins on gaze.  duh
+/// Spins transform component of object with gaze awareness, on gaze.  duh
 /// -ski 
 /// </summary>
 [RequireComponent(typeof(GazeAware))]
