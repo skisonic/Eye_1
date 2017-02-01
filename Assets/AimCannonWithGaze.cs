@@ -70,7 +70,7 @@ public class AimCannonWithGaze : MonoBehaviour {
 
     void FixedUpdate()
     {
-        Vector3 fwd = transform.TransformDirection(Vector3.forward);
+        //Vector3 fwd = transform.TransformDirection(Vector3.forward);
         //Vector3 targetDir = gazePoint3 - gameObject.transform.position;
         Vector3 targetDir = gazePoint3 - gameObject.transform.position;
         RaycastHit hit;
