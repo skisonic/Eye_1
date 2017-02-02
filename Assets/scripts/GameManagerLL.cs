@@ -16,7 +16,7 @@ public class GameManagerLL : MonoBehaviour {
 
 
     private float timer, seconds, startTime, roundTime;
-    int sphereRand;
+    int sphereRand, sphereRand2;
     float randInterval, randInterval2, randChance, randDuration;
     public Material[] materials;
 
@@ -33,8 +33,11 @@ public class GameManagerLL : MonoBehaviour {
     private GameObject[] spheresCntnr = new GameObject[maxTargets];
     float xBound = 5.0f;
     float yBound = 4.0f;
+    float pointGrowthRateGaze = 1.05f;
+    bool gameRunning = false;
 
     Text pointText, leftText;
+
 
     // Use this for initialization
     void Start()
@@ -43,7 +46,7 @@ public class GameManagerLL : MonoBehaviour {
         Application.targetFrameRate = 30;
 
         timer = 15;
-        roundTime = 10; //game over time
+        roundTime = 20; //game over time
         startTime = Time.time;
         seconds = 0;
         randInterval = Random.Range(0.3f, 0.6f);
@@ -68,11 +71,16 @@ public class GameManagerLL : MonoBehaviour {
         spheres[2] = sphereR;
         */
 
+        
+
+
         spheres[0].GetComponent<MeshRenderer>().enabled = false;
         spheres[1].GetComponent<MeshRenderer>().enabled = false;
         spheres[2].GetComponent<MeshRenderer>().enabled = false;
 
         sphereRand = Random.Range(0, 2);
+        sphereRand2 = Random.Range(0, 2);
+
 
         for (int i = 0; i < maxTargets; i++)
         {
@@ -115,10 +123,73 @@ public class GameManagerLL : MonoBehaviour {
             }
 
         }
+        
+        PlaceSpheres();
+        gameRunning = true;
+
+    }
+
+    void PlaceSpheres()
+    {
+
+        spheres[0].GetComponent<MeshRenderer>().enabled = false;
+        spheres[1].GetComponent<MeshRenderer>().enabled = false;
+        spheres[2].GetComponent<MeshRenderer>().enabled = false;
+
+        sphereRand = Random.Range(0, 2);
+
+        for (int i = 0; i < maxTargets; i++) //this bit of code generates a spehere and checks that it doesnt collide with the last sphere created.
+        {
+
+            spheresCntnr[i].transform.position = new Vector3(Random.Range(-xBound, xBound), Random.Range(-2.0f, yBound));
+
+            spheresCntnr[i].GetComponent<HandleCollisionLL>().current = true;
+            spheresCntnr[i].GetComponent<HandleCollisionLL>().index = i + 1; 
+
+            if (spheresCntnr[i].GetComponent<HandleCollisionLL>().sphere_coll == true)
+            {
+                Debug.Log("bonk");
+                //i--;
+            }
+            else
+            {
+                //Debug.Log("bink");
+                //spheresCntnr[i].GetComponent<Rigidbody>().isKinematic = true;
+            }
+
+            // need to move them if they overlap
+            //spheresCntnr[i] = Instantiate<GameObject>(sphere_pf);
+            spheresCntnr[i].GetComponent<HandleCollisionLL>().current = false;
+            //instantiate sphere 
+        }
+
+        for (int i = 0; i < maxTargets; i++)
+        {
+            if (spheresCntnr[i].GetComponent<HandleCollisionLL>().sphere_coll == true)
+            {
+                //find new placement
+                Debug.Log("bonk");
+                spheresCntnr[i].transform.position = new Vector3(Random.Range(-xBound, xBound), Random.Range(-2.0f, yBound));
+                spheresCntnr[i].GetComponent<HandleCollisionLL>().sphere_coll = false;
+                //i--;
+            }
+            else
+            {
+                //i--;
+            }
+        }
     }
 
     // Update is called once per frame
     void Update () {
+
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            EndGame();
+            RestartGame();
+            Debug.Log("restart ");
+        }
+
         if (seconds >= roundTime)
         {
             //end game
@@ -127,82 +198,143 @@ public class GameManagerLL : MonoBehaviour {
         }
         else
         {
-
-            if (Mathf.Floor(Time.time) >= seconds)
+            if (gameRunning)
             {
-                timer -= timer - seconds;
+                if ( (Mathf.Floor(Time.time) - startTime ) >= seconds)
+                {
+                    timer -= timer - seconds;
 
-                seconds++;
-                Debug.Log("seconds = " + seconds);
-                if (randChance < randInterval && isTargetOn == false)
-                {
-                    StopAllCoroutines();
-                    StartCoroutine(TargetOn());
+                    seconds++;
+                    Debug.Log("seconds = " + seconds + "roundtime = " + roundTime);
+                    if (randChance < randInterval && isTargetOn == false)
+                    {
+                        StopAllCoroutines();
+                        if (seconds <= 3) //hacky way of starting phase 2
+                        {
+                            StartCoroutine(TargetOn());
+                        }else
+                        {
+                            StartCoroutine(TargetsOn());
+                        }
+                    }
+                    randChance = Random.Range(0, 0.4f);
                 }
-                randChance = Random.Range(0, 0.4f);
-            }
 
-            if (isTargetOn)
-            {
+                if (isTargetOn)
+                {
 
-                if (sphereRand == 0 && Input.GetKeyDown(KeyCode.Alpha1))
-                {
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
-                    Debug.Log("points = " + points);
-                    Debug.Log("moues = " + Input.mousePosition);
-                    Physics.Raycast(ray, out hit);
-                    if (hit.collider.gameObject.name == "SphereL") //simulate gaze with raycast
+                    //if (sphereRand == 0 && (Input.GetKeyDown(KeyCode.Alpha1)))
+                    if ((sphereRand == 0 || sphereRand2 == 0) && (Input.GetKeyDown(KeyCode.Mouse0))) //click
                     {
-                        points++;
-                        score += points;
-                        hit.collider.gameObject.GetComponent<Renderer>().material = materials[0];
-                        Debug.Log("nailed sphere L");
+                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        RaycastHit hit;
+                        Debug.Log("points = " + points);
+                        Debug.Log("moues = " + Input.mousePosition);
+                        Physics.Raycast(ray, out hit);
+                        if (hit.collider.gameObject.name == "SphereL") //simulate gaze with raycast
+                        {
+                            points++;
+                            if (points == 1) score += 5; // extra points for actually clicking
+                            score += points;
+                            hit.collider.gameObject.GetComponent<Renderer>().material = materials[0];
+                            spheres[0].GetComponent<Renderer>().material.color += new Color(points/10.0f, 0, 0);
+                            Debug.Log("nailed sphere L");
+                        }
                     }
-                }
-                if (sphereRand == 1 && (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Alpha2)))
-                {
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
-                    Debug.Log("points = " + points);
-                    Debug.Log("moues = " + Input.mousePosition);
-                    Physics.Raycast(ray, out hit);
-                    if (hit.collider.gameObject.name == "SphereM") //simulate gaze with raycast
+
+                    if (spheres[0].GetComponent<HandleGazeLL>().hasGaze)
                     {
-                        points++;
-                        score += points;
-                        hit.collider.gameObject.GetComponent<Renderer>().material = materials[0];
-                        Debug.Log("nailed sphere M");
+                        if (spheres[0].GetComponent<HandleGazeLL>().hasGaze) //simulate gaze with raycast
+                        {
+                            points *= pointGrowthRateGaze;
+                            score += Mathf.CeilToInt(points);
+                            spheres[0].GetComponent<Renderer>().material = materials[1];
+                            spheres[0].GetComponent<Renderer>().material.color += new Color(points/10.0f, 0, 0);
+                            Debug.Log("nailed sphere L");
+                        }
                     }
-                }
-                if (sphereRand == 2 && (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Alpha3)))
-                {
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
-                    Debug.Log("points = " + points);
-                    Debug.Log("moues = " + Input.mousePosition);
-                    Physics.Raycast(ray, out hit);
-                    if (hit.collider.gameObject.name == "SphereR") //simulate gaze with raycast
+
+                    //if (sphereRand == 1 && (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Alpha2))) //middle sphere
+                    if ((sphereRand == 1 || sphereRand2 == 1) && (Input.GetKeyDown(KeyCode.Mouse0)))
                     {
-                        points++;
-                        score += points;
-                        hit.collider.gameObject.GetComponent<Renderer>().material = materials[0];
-                        Debug.Log("nailed sphere R");
+                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        RaycastHit hit;
+                        Debug.Log("points = " + points);
+                        Debug.Log("moues = " + Input.mousePosition);
+                        Physics.Raycast(ray, out hit);
+                        if (hit.collider.gameObject.name == "SphereM" || spheres[1].GetComponent<HandleGazeLL>().hasGaze) //simulate gaze with raycast
+                        {
+                            points++;
+                            if (points == 1) score += 5; // extra points for actually clicking
+                            score += points;
+                            hit.collider.gameObject.GetComponent<Renderer>().material = materials[0];
+                            spheres[1].GetComponent<Renderer>().material.color += new Color(points / 10.0f, 0, 0);
+                            Debug.Log("nailed sphere M");
+                        }
                     }
+
+                    if (spheres[1].GetComponent<HandleGazeLL>().hasGaze) 
+                    {
+                        if (spheres[1].GetComponent<HandleGazeLL>().hasGaze) 
+                        {
+                            points++;
+                            score += Mathf.CeilToInt(points);
+                            spheres[1].GetComponent<Renderer>().material = materials[0];
+                            spheres[1].GetComponent<Renderer>().material.color += new Color(points / 10.0f, 0, 0);
+                            Debug.Log("nailed sphere L");
+                        }
+                    }
+
+                    //if (sphereRand == 2 && (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Alpha3)))
+                    if ((sphereRand == 2 || sphereRand2 == 2) && (Input.GetKeyDown(KeyCode.Mouse0)))
+                    {
+                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        RaycastHit hit;
+                        Debug.Log("points = " + points);
+                        Debug.Log("moues = " + Input.mousePosition);
+                        Physics.Raycast(ray, out hit);
+                        if (hit.collider.gameObject.name == "SphereR" || spheres[2].GetComponent<HandleGazeLL>().hasGaze) //simulate gaze with raycast
+                        {
+                            points++;
+                            score += points;
+                            if (points == 1) score += 5; // extra points for actually clicking
+                            hit.collider.gameObject.GetComponent<Renderer>().material = materials[0];
+                            spheres[2].GetComponent<Renderer>().material.color += new Color(points / 10.0f, 0, 0);
+                            Debug.Log("nailed sphere R");
+                        }
+                    }
+
+                    if (spheres[2].GetComponent<HandleGazeLL>().hasGaze)
+                    {
+                        if (spheres[2].GetComponent<HandleGazeLL>().hasGaze) 
+                        {
+                            points++;
+                            score += Mathf.CeilToInt(points);
+                            spheres[2].GetComponent<Renderer>().material = materials[0];
+                            spheres[2].GetComponent<Renderer>().material.color += new Color(points / 10.0f, 0, 0);
+                            Debug.Log("nailed sphere L");
+                        }
+                    }
+
+
+                    //timer -= timer - Time.time;
+                    pointText.text = score.ToString();
+                    //leftText.text = timer.ToString();
+                    leftText.text = (roundTime - seconds).ToString();
                 }
-                //timer -= timer - Time.time;
-                pointText.text = score.ToString();
-                //leftText.text = timer.ToString();
-                leftText.text = (roundTime - seconds).ToString(); 
             }
         }
     }
 
     IEnumerator TargetOn()
     {
+        Debug.Log("entered Target on");
+
+
+        spheres[sphereRand].transform.position = new Vector3(Random.Range(-xBound, xBound), Random.Range(-2.0f, yBound));
         isTargetOn = true;
         spheres[sphereRand].GetComponent<MeshRenderer>().enabled = true;
-        spheres[sphereRand].GetComponent<Renderer>().material = materials[1];
+        spheres[sphereRand].GetComponent<Renderer>().material = materials[2];
         yield return new WaitForSeconds(randDuration);
         //spheres[sphereRand].GetComponent<Renderer>().material = materials[1];
         spheres[sphereRand].GetComponent<MeshRenderer>().enabled = false;
@@ -214,11 +346,69 @@ public class GameManagerLL : MonoBehaviour {
         yield return null;
     }
 
+    IEnumerator TargetsOn()
+    {
+        int target_index;
+        Debug.Log("entered targets on");
+
+
+        spheres[sphereRand].transform.position = new Vector3(Random.Range(-xBound, xBound), Random.Range(-2.0f, yBound));
+        isTargetOn = true;
+        spheres[sphereRand].GetComponent<MeshRenderer>().enabled = true;
+        spheres[sphereRand].GetComponent<Renderer>().material = materials[2];
+
+
+        spheres[sphereRand2].transform.position = new Vector3(Random.Range(-xBound, xBound), Random.Range(-2.0f, yBound));
+        isTargetOn = true;
+        spheres[sphereRand2].GetComponent<MeshRenderer>().enabled = true;
+        spheres[sphereRand2].GetComponent<Renderer>().material = materials[2];
+        yield return new WaitForSeconds(randDuration);
+
+
+        //spheres[sphereRand].GetComponent<Renderer>().material = materials[1];
+        spheres[sphereRand].GetComponent<MeshRenderer>().enabled = false;
+        spheres[sphereRand2].GetComponent<MeshRenderer>().enabled = false;
+        points = 0;
+
+        sphereRand = Random.Range(0, 3);
+        sphereRand2 = Random.Range(0, 3);
+        randChance = Random.Range(0, 0.4f);
+        isTargetOn = false;
+        yield return null;
+    }
+
     void EndGame()
     {
+        Debug.Log("entered endgame");
+
         StopAllCoroutines();
         leftText.text = "GG. Score: ";
         pointText.text = score.ToString();
+        isTargetOn = false;
+        gameRunning = false;
+        seconds = 0;
 
+    }
+
+    void RestartGame()
+    {
+        StopAllCoroutines();
+
+        timer = 15;
+        roundTime = 20; //game over time
+        startTime = Time.time;
+        seconds = 0;
+        randInterval = Random.Range(0.3f, 0.6f);
+        randChance = Random.Range(0, 0.3f);
+
+        randDuration = Random.Range(1.3f, 2.0f);
+        score = 0;
+        points = 1;
+
+
+        leftText.text = roundTime.ToString();
+        PlaceSpheres();
+        Debug.Log("placed sphere");
+        gameRunning = true;
     }
 }
