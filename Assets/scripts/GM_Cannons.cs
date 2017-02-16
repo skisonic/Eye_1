@@ -29,7 +29,7 @@ public class GM_Cannons : MonoBehaviour
     void Start()
     {
 
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 30;
 
         timer = 25;
         seconds = 0;
@@ -195,7 +195,7 @@ public class GM_Cannons : MonoBehaviour
     {
         
         spawner.GetComponent<SpawnEnemies>().enabled = true;
-        sphereL.GetComponent<RotateCannon>().enabled = true;
+        //sphereL.GetComponent<RotateCannon>().enabled = true;
         //sphereR.GetComponent<RotateCannon>().enabled = false;
         home.GetComponent<TakeDamage>().enabled = enabled;
         home.GetComponent<TakeDamage>().hp = home.GetComponent<TakeDamage>().max_hp;

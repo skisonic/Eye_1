@@ -21,6 +21,7 @@ public class SpawnEnemies : MonoBehaviour {
         }
         else
         {
+            Debug.Log("diejf");
             StartCoroutine(DropEnemies());
             interval = 5.5f;
         }
@@ -28,13 +29,13 @@ public class SpawnEnemies : MonoBehaviour {
 
     IEnumerator DropEnemies()
     {
-        numEnemies = Random.Range(0, 5);
+        numEnemies = Random.Range(1, 5);
         float pauseTime;
 
         for (int i = 0; i <= numEnemies; i++)
         {
             //drop some enemies
-            //GameObject enemy = Instantiate(enemy_pf, transform.position + new Vector3(i * 0.1f, -2.0f, 0), Quaternion.identity) as GameObject;
+            GameObject enemy = Instantiate(enemy_pf, transform.position + new Vector3(i * 0.1f, -2.0f, 0), Quaternion.identity) as GameObject;
             count++;
             pauseTime = Random.Range(1.0f, 5.0f);
             yield return new WaitForSeconds(.1f * pauseTime);
