@@ -34,9 +34,10 @@ public class FireCannonOnGaze : MonoBehaviour
         if ((_gazeAwareL.HasGazeFocus && gameObject.name == "SphereL" && Input.GetKey(KeyCode.Space)) || Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha8))
         {
             //Vector3 shotPath = Vector3.Distance(gameObject.transform.position, cannon.transform.position);
+            //bullet = Instantiate(bullet_pf, cannonL.transform.position, Quaternion.Euler(new Vector3(0, 0, 90f + transform.localRotation.z * 90.0f))) as GameObject;
             bullet = Instantiate(bullet_pf, cannonL.transform.position, Quaternion.Euler(new Vector3(0, 0, 90f + transform.localRotation.z * 90.0f))) as GameObject;
             //bullet.transform.parent = gameObject.transform;
-            bullet.GetComponent<Rigidbody>().AddForce(gameObject.transform.right * 1000);
+            bullet.GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * 500);
             //bullet.transform.parent = null;
             //gazePoint = EyeTracking.GetGazePoint();
             //Debug.Log("found it");

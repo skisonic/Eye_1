@@ -23,9 +23,14 @@ public class AimCannonWithGaze : MonoBehaviour {
     Vector3 gazePoint3;
 
     GameObject bullet;
+    GameObject cannonL;
     int aim_interval;
     const int AIM_INT = 10;
     float start_time,current_time;
+
+
+    Ray ray, ray2;
+    RaycastHit hit;
 
     void Start()
     {
@@ -33,12 +38,49 @@ public class AimCannonWithGaze : MonoBehaviour {
         aim_interval = AIM_INT;
         start_time = Time.time;
         current_time = Time.time;
+        cannonL = GameObject.Find("CannonL");
     }
 
     // Update is called once per frame
     void Update () {
 
         current_time = Time.time;
+
+        // Rotate the camera every frame so it keeps looking at the target 
+        gazePoint = EyeTracking.GetGazePoint();
+        gazePoint3 = new Vector3(gazePoint.Viewport.x, gazePoint.Viewport.y, 0);
+
+        /*
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        Physics.Raycast(ray, out hit);
+        */
+
+        //ray = new Ray(transform.position, Input.mousePosition);
+        ray = new Ray(transform.position, transform.right);
+        //ray2 = new Ray(Camera.main.transform.position, Camera.main.WorldToScreenPoint(Input.mousePosition));
+        ray2 = new Ray(Camera.main.transform.position, Input.mousePosition);
+        Debug.Log("Camera.main.ScreenToWorldPoint(Input.mousePosition) " + Camera.main.ScreenPointToRay(Input.mousePosition));
+        Physics.Raycast(ray, out hit, 1000f);
+        Debug.Log("hit = " + hit.collider.gameObject.name);
+        Debug.DrawRay(ray.origin, ray.direction + transform.right * 100f);
+        Debug.DrawRay(ray2.origin, ray2.direction + new Vector3(0, 0, 25f));
+
+        if (Physics.Raycast(ray, 1000f))
+            transform.LookAt(hit.point);
+        else Debug.Log("bad very bad");
+        /*
+
+        if (hit.collider.gameObject.name == "Rear Wall") //simulate gaze with raycast
+        {
+            Debug.Log("hit info" + hit.point);
+            //transform.LookAt(Camera.main.ScreenPointToRay(Input.mousePosition) - transform.position));
+            transform.LookAt(hit.point);
+            Debug.Log("Moues position on screen" + Input.mousePosition);
+        }
+        */
+
+
 
         if (_gazeAware.HasGazeFocus)
         {
