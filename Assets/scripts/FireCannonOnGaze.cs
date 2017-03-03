@@ -31,13 +31,48 @@ public class FireCannonOnGaze : MonoBehaviour
 
     void Update()
     {
+
+        if ((Input.GetKeyDown(KeyCode.Alpha1)))
+        {
+            //Vector3 shotPath = Vector3.Distance(gameObject.transform.position, cannon.transform.position);
+            //bullet = Instantiate(bullet_pf, cannonL.transform.position, Quaternion.Euler(new Vector3(0, 0, 90f + transform.localRotation.z * 90.0f))) as GameObject;
+            bullet = Instantiate(bullet_pf, transform.position , Quaternion.identity) as GameObject;
+            BulletStats bs = bullet.GetComponent<BulletStats>();
+            switch (GetComponent<CannonStats>().gc)
+            {
+                case CannonStats.gunColor.red:
+                    bs.bc = BulletStats.gunColor.red;
+                    break;
+                case CannonStats.gunColor.blue:
+                    bs.bc = BulletStats.gunColor.blue;
+                    break;
+                case CannonStats.gunColor.green:
+                    bs.bc = BulletStats.gunColor.green;
+                    break;
+                case CannonStats.gunColor.yellow:
+                    bs.bc = BulletStats.gunColor.yellow;
+                    break;
+                default:
+                    Debug.Log("error no gun color assigned");
+                    break;
+            }
+            bs.Init(); 
+            //Debug.Log("bullet position = " + bullet.gameObject.transform.position);
+            //bullet.transform.parent = gameObject.transform;
+            bullet.GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * 500f);
+            //bullet.transform.parent = null;
+            //gazePoint = EyeTracking.GetGazePoint();
+            //Debug.Log("found it");
+        }
+
+        /*
         if ((_gazeAwareL.HasGazeFocus && gameObject.name == "SphereL" && Input.GetKey(KeyCode.Space)) || Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha8))
         {
             //Vector3 shotPath = Vector3.Distance(gameObject.transform.position, cannon.transform.position);
             //bullet = Instantiate(bullet_pf, cannonL.transform.position, Quaternion.Euler(new Vector3(0, 0, 90f + transform.localRotation.z * 90.0f))) as GameObject;
-            bullet = Instantiate(bullet_pf, cannonL.transform.position, Quaternion.Euler(new Vector3(0, 0, 90f + transform.localRotation.z * 90.0f))) as GameObject;
+            bullet = Instantiate(bullet_pf, transform.position, Quaternion.identity) as GameObject;
             //bullet.transform.parent = gameObject.transform;
-            bullet.GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * 500);
+            bullet.GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * 750f);
             //bullet.transform.parent = null;
             //gazePoint = EyeTracking.GetGazePoint();
             //Debug.Log("found it");
@@ -52,6 +87,7 @@ public class FireCannonOnGaze : MonoBehaviour
             //gazePoint = EyeTracking.GetGazePoint();
             //Debug.Log("found it");
        }
+       */
  
    }
 }

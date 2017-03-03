@@ -3,16 +3,27 @@ using System.Collections;
 
 public class BulletStats : MonoBehaviour {
 
-    float lifetime;
+    public float lifetime;
 
-	// Use this for initialization
-	void Start () {
-        lifetime = 5.0f;
+
+    public enum gunColor { red, green, blue, yellow, none };
+    public Material[] gunMats;
+
+    public gunColor bc = gunColor.none; //bullet color
+
+    void Start () {
+    }
+
+
+    // Use this for initialization
+    public void Init()
+    {
+        GetComponent<MeshRenderer>().material = gunMats[(int)bc];
     }
 
     // Update is called once per frame
     void Update () {
-        if (lifetime >= 0 && transform.position.y <= 7.0f)
+        if (lifetime >= 0)
         {
             lifetime -= Time.deltaTime;
         }
