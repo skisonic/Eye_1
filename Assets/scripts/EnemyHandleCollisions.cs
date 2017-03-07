@@ -27,7 +27,7 @@ public class EnemyHandleCollisions : MonoBehaviour {
             {
                 GameObject death = Instantiate(enemy_death_pf, transform.position, Quaternion.identity) as GameObject;
                 home.GetComponent<TakeDamage>().score++;
-                Debug.Log("somebody died");
+                //Debug.Log("somebody died");
                 Destroy(gameObject);
             }
         }

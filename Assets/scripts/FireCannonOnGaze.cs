@@ -29,6 +29,8 @@ public class FireCannonOnGaze : MonoBehaviour
         _gazeAwareR = cannonR.GetComponentInParent<GazeAware>();
     }
 
+
+    
     void Update()
     {
 
@@ -59,7 +61,7 @@ public class FireCannonOnGaze : MonoBehaviour
             bs.Init(); 
             //Debug.Log("bullet position = " + bullet.gameObject.transform.position);
             //bullet.transform.parent = gameObject.transform;
-            bullet.GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * 500f);
+            bullet.GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * 10f,ForceMode.Impulse);
             //bullet.transform.parent = null;
             //gazePoint = EyeTracking.GetGazePoint();
             //Debug.Log("found it");

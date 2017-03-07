@@ -12,34 +12,32 @@ public class CannonStats : MonoBehaviour {
 
     public gunColor gc;
 
-    float lifetime;
-    float startTime, activeTimer;
     public bool powerOn;
+    private bool firstPower = true;
+    float activeTimer;
 
     MeshRenderer mesh;
 
+    public const float MIN_TIMER = 6.0f;
+    public const float MAX_TIMER = 15.0f;
     // Use this for initialization
     void Start () {
-        lifetime = 20.0f;
-        powerOn = true;
         mesh = GetComponent<MeshRenderer>();
-
-        activeTimer = Random.Range(4.0f, 8.0f);
-        startTime = Time.time;
-        SwitchColor();
+ 
+        PowerOn();
 	}
 
     // Update is called once per frame
     void Update()
     {
         activeTimer -= Time.deltaTime;
-        if (activeTimer <= lifetime && powerOn)
+        if (activeTimer <= 0 && powerOn)
         {
-            Debug.Log("depower " + activeTimer);
-            //PowerOff();
+            //Debug.Log("depower " + activeTimer);
+            PowerOff();
         }
 
-        /*
+        
         if (GetComponent<GazeAware>().HasGazeFocus)
         {
             if(Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Alpha1))
@@ -47,16 +45,21 @@ public class CannonStats : MonoBehaviour {
                 PowerOn();
             }
         }
-        */
     }
 
     public void PowerOn()
     {
         powerOn = true;
-        activeTimer = Random.Range(5.0f, 9.0f);
+        activeTimer = Random.Range(MIN_TIMER, MAX_TIMER);
+        if (firstPower == true)
+        {
+            activeTimer *= 1.5f;
+            firstPower = false;
+        }
         mesh.material = gunMats[(int)gc];
         GetComponent<FireCannonOnGaze>().enabled = true;
         GetComponent<AimCannonWithGaze>().enabled = true;
+        SwitchColor();
     }
 
     public void PowerOff()

@@ -16,7 +16,7 @@ public class EnemyStats : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        lifetime = 10.0f;
+        lifetime = 15.0f;
         rb = GetComponent<Rigidbody>();
         GetComponent<MeshRenderer>().material = gunMats[(int)ec];
     }

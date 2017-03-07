@@ -36,6 +36,7 @@ public class AimCannonWithGaze : MonoBehaviour
     void Start()
     {
         _gazeAware = GetComponent<GazeAware>();
+        gazePoint = EyeTracking.GetGazePoint();
         aim_interval = AIM_INT;
         start_time = Time.time;
         current_time = Time.time;

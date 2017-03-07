@@ -25,15 +25,16 @@ public class GM_Cannons : MonoBehaviour
     public Text score_text, timer_text, hp_label, hp_text;
 
     public int gameState; //0=start, 1=active, 2=ending, 3=ended
+    public const int GAMETIME = 30;
 
     // Use this for initialization
     void Start()
     {
         
-        Application.targetFrameRate = 30;
+        Application.targetFrameRate = 60;
         startTime = Time.time;
         timer = 25;
-        myTimer = 30;
+        myTimer = GAMETIME;
         seconds = 0;
         randInterval = Random.Range(0.3f, 0.6f);
         randChance = Random.Range(0, 0.3f);
@@ -64,16 +65,18 @@ public class GM_Cannons : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        myTimer -= (Time.deltaTime);
-        timer_text.text = Mathf.FloorToInt(myTimer).ToString();
-        score_text.text = home.GetComponent<TakeDamage>().score.ToString();
-
 
         if (myTimer <= 0 || home.GetComponent<TakeDamage>().hp <= 0)
         {
             gameState = 1; //ending game
             EndGame();
 
+        }
+        else
+        {
+            myTimer -= (Time.deltaTime);
+            timer_text.text = Mathf.FloorToInt(myTimer).ToString();
+            score_text.text = home.GetComponent<TakeDamage>().score.ToString();
         }
 
         if (Mathf.Floor(Time.time) >= seconds)
@@ -252,7 +255,9 @@ public class GM_Cannons : MonoBehaviour
     {
         gameState = 2;
         spawner.GetComponent<SpawnEnemies>().enabled = false;
+        hp_label.color = Color.red;
         hp_label.text = "Game\nOver";
+        hp_text.color = Color.red;
         hp_text.text = "0";
         home.GetComponent<TakeDamage>().enabled = false;
     }
@@ -263,11 +268,23 @@ public class GM_Cannons : MonoBehaviour
         spawner.GetComponent<SpawnEnemies>().enabled = true;
         home.GetComponent<TakeDamage>().enabled = enabled;
         home.GetComponent<TakeDamage>().hp = home.GetComponent<TakeDamage>().max_hp;
+        hp_label.color = Color.black;
         hp_label.text = "HP";
+        hp_text.color = Color.green;
         hp_text.text = home.GetComponent<TakeDamage>().hp.ToString();
-        foreach(GameObject enemy_cube in (GameObject.FindGameObjectsWithTag("Enemy_Cube")))
+        foreach (GameObject enemy_cube in (GameObject.FindGameObjectsWithTag("Enemy_Cube")))
         {
             Destroy(enemy_cube);
+        }
+        foreach (GameObject bullet in (GameObject.FindGameObjectsWithTag("Bullet")))
+        {
+            Destroy(bullet);
+        }
+        home.GetComponent<TakeDamage>().score = 0;
+        myTimer = GAMETIME + 1;
+        foreach (GameObject cannon in cannons)
+        {
+            cannon.GetComponent<CannonStats>().PowerOn();
         }
     }
 
