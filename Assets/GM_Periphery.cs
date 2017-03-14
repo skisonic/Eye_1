@@ -28,7 +28,7 @@ public class GM_Periphery : MonoBehaviour {
 
     MeshRenderer rend;
     float hideTimer, showTimer, gazeDmgTimer, targetsHideTimer, targetsShowTimer;
-    const float HIDE_TIME = 1.0f;
+    const float HIDE_TIME = 0.5f;
     const float SHOW_TIME = 3.0f;
     const float GAZE_ERR_TIME = 2.0f;
     const float HIDE_TARGETS_TIME = 2.0f;
@@ -39,12 +39,21 @@ public class GM_Periphery : MonoBehaviour {
     float shrinkDmg_wait;
     bool shrinkWait;
 
-    const int MAX_HP = 20;
+    const int MAX_HP = 10;
 
     int prototype_var; //0 = cube, 1 = cannons
     public int score = 0;
     Color og_text;
     bool targetsShowing = false;
+
+    Vector3 newPos;
+
+    private float journeyLength;
+    public Transform startMarker;
+    public Transform endMarker;
+    public float speed = 1.0F;
+
+    float left, right, top, bottom;
 
     // Use this for initialization
     void Start () {
@@ -79,6 +88,8 @@ public class GM_Periphery : MonoBehaviour {
         hp_text.text = hp.ToString();
         og_text = hp_text.color;
 
+        startTime = Time.time;
+        
     }
 
     // Update is called once per frame
@@ -92,19 +103,19 @@ public class GM_Periphery : MonoBehaviour {
         else
         {
             myTimer -= (Time.deltaTime);
-            if (targetsShowing == false)
+            if (targetsShowing)
             {
-                targetsShowTimer--;
+                targetsShowTimer -= (Time.deltaTime);
             }else
             {
-                targetsHideTimer--;
+                targetsHideTimer -= (Time.deltaTime);
             }
             timer_text.text = Mathf.FloorToInt(myTimer).ToString();
         }
 
         if (rend.enabled == false)
         {
-            hideTimer -= Time.deltaTime;
+            hideTimer -= Time.deltaTime; //counts down while home base is not visible
         }
         else
         {
@@ -117,37 +128,100 @@ public class GM_Periphery : MonoBehaviour {
 
         if (hideTimer <= 0)
         {
-            MoveHome();
+            MoveAndShowHome();
+            //GenNewHomePos();
         }
-        if(showTimer <= 0)
+
+        if (showTimer <= 0)
         {
             HideHome();
         }
-        if(gazeDmgTimer <= 0)
+
+        if (gazeDmgTimer <= 0)
         {
             DamageHome();
         }
-        if(targetsHideTimer <= 0)
+
+        if (targetsHideTimer <= 0)
         {
             MoveTargets();
         }
-        if(targetsShowTimer <= 0)
+        else if(targetsShowTimer <= 0)
         {
             HideTargets();
         }
 
-	}
 
-    void MoveHome()
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (targetsShowing)
+            {
+                points++;
+                score_text.text = points.ToString();
+            }
+            else
+            {
+                points--;
+                score_text.text = points.ToString();
+                StartCoroutine(FlashScoreTextRed());
+            }
+        }
+    }
+
+
+
+    private Limits GetLimits()
+    {
+        Limits val = new Limits();
+        Vector3 lowerLeft = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
+        Vector3 upperRight = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+        val.Left = lowerLeft.x + 5f;
+        val.Right = upperRight.x - 5f;
+        val.Top = upperRight.y - 5f;
+        val.Bottom = lowerLeft.y + 5f;
+        return val;
+    }
+
+    public class Limits
+    {
+        public float Left { get; set; }
+        public float Right { get; set; }
+        public float Top { get; set; }
+        public float Bottom { get; set; }
+    }
+
+
+    void GenNewHomePos()
     {
         float xPos, yPos, zPos;
-        float orthScale; 
+        float orthScale;
 
         xPos = Random.Range(-9.0f, 9.0f);
         yPos = Random.Range(-9.0f, 9.0f);
         zPos = Random.Range(1.0f, 4.0f);
-        orthScale = Random.Range(1.5f, 4.0f);
-        Vector3 newPos = new Vector3(xPos, yPos, -zPos*zPos);
+        orthScale = Random.Range(1.5f, 3.0f);
+        Vector3 newPos = new Vector3(xPos, yPos, -zPos * zPos);
+        rend.enabled = true;
+    }
+
+    void MoveAndShowHome()
+    {
+        float xPos, yPos, zPos;
+        float orthScale;
+
+
+        left = GetLimits().Left;
+        right = GetLimits().Right;
+        top = GetLimits().Top;
+        bottom = GetLimits().Bottom;
+
+        xPos = Random.Range(-left, right);
+        yPos = Random.Range(-bottom, top);
+        zPos = Random.Range(1.0f, 4.0f);
+        orthScale = Random.Range(1.5f, 3.0f);
+        newPos = new Vector3(xPos, yPos, -zPos*zPos);
+
+        //Debug.Log("ilimits: Left " + GetLimits().Left + " R: " + GetLimits().Right);
 
         if (Camera.main.orthographic == true)
         {
@@ -156,8 +230,23 @@ public class GM_Periphery : MonoBehaviour {
 
         rend.enabled = true;
 
-        home.transform.position = newPos;
+
+        //home.transform.position = newPos;
+        StartCoroutine(MoveTwdHomePos());
         hideTimer = HIDE_TIME;
+
+    }
+
+
+    IEnumerator MoveTwdHomePos()
+    {
+        float distBetween = Vector2.Distance((Vector2)newPos, (Vector2)home.transform.position);
+        while ((distBetween > 0.0f))
+        {
+            //home.transform.position = Vector3.MoveTowards(home.transform.position, newPos, 0.3f);
+            home.transform.position = Vector3.MoveTowards(home.transform.position, newPos, Mathf.Sqrt(distBetween)/40.0f);
+            yield return null;
+        }
     }
 
     void MoveTargets()
@@ -171,20 +260,39 @@ public class GM_Periphery : MonoBehaviour {
             xPos = Random.Range(-9.0f, 9.0f);
             yPos = Random.Range(-9.0f, 9.0f);
             zPos = Random.Range(1.0f, 4.0f);
-            orthScale = Random.Range(1.5f, 3.0f);
+            orthScale = Random.Range(1.2f, 2.0f);
+            float lightChance = Random.Range(0, 1.0f);
             Vector3 newPos = new Vector3(xPos, yPos, -zPos * zPos);
 
             if (Camera.main.orthographic == true)
             {
-                spheres[i].transform.localScale *= orthScale * orthScale;
+                if (rend.enabled) //if home enabled 
+                {
+                    //Debug.Log("distance between sphere " + i + " and home = " + Vector2.Distance((Vector2)newPos, (Vector2)home.transform.position));
+                }
+
+                if (Vector2.Distance((Vector2)newPos, (Vector2)home.transform.position) > 7.0f)
+                {
+                    spheres[i].transform.localScale = Vector3.one * ( orthScale * orthScale);
+                    spheres[i].gameObject.GetComponent<MeshRenderer>().enabled = true;
+                    if (lightChance <= .5f)
+                    {
+                        spheres[i].gameObject.GetComponent<MeshRenderer>().material = materials[1];
+                        targetsShowing = true;
+                    }
+                    else
+                    {
+                        spheres[i].gameObject.GetComponent<MeshRenderer>().material = materials[0];
+                    }
+                    spheres[i].transform.position = newPos;
+                }
+                else
+                {
+                    i--;//try again to find a farther spot ugh.
+                }
+
             }
-
-            spheres[i].gameObject.GetComponent<MeshRenderer>().enabled = true;
-            
-
-            spheres[i].transform.position = newPos;
         }
-        targetsShowing = true;
         targetsHideTimer = HIDE_TARGETS_TIME;
 
     }
@@ -207,6 +315,7 @@ public class GM_Periphery : MonoBehaviour {
             {
                 spheres[i].transform.localScale = Vector3.one;
             }
+            spheres[i].gameObject.GetComponent<MeshRenderer>().material = materials[0];
             spheres[i].gameObject.GetComponent<MeshRenderer>().enabled = false;
         }
         targetsShowTimer = SHOW_TARGETS_TIME;
@@ -231,5 +340,17 @@ public class GM_Periphery : MonoBehaviour {
         hp_text.color = Color.red;
         yield return new WaitForSeconds(0.2f);
         hp_text.color = og_text;
+    }
+
+    IEnumerator FlashScoreTextRed()
+    {
+        StopCoroutine(FlashScoreTextRed());
+        score_text.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        score_text.color = Color.white;
+        yield return new WaitForSeconds(0.1f);
+        score_text.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        score_text.color = og_text;
     }
 }

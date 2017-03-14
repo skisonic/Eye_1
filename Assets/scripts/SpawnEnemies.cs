@@ -13,7 +13,7 @@ public class SpawnEnemies : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        interval = 3.0f;
+        interval = 4.0f;
 	}
 	
 	// Update is called once per frame
@@ -25,7 +25,7 @@ public class SpawnEnemies : MonoBehaviour {
         else
         {
             StartCoroutine(DropEnemies());
-            interval = 5.5f;
+            interval = 7.5f;
         }
     }
 
