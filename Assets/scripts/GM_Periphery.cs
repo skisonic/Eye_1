@@ -268,7 +268,7 @@ public class GM_Periphery : MonoBehaviour {
             {
                 if (rend.enabled) //if home enabled 
                 {
-                    //Debug.Log("distance between sphere " + i + " and home = " + Vector2.Distance((Vector2)newPos, (Vector2)home.transform.position));
+    
                 }
 
                 if (Vector2.Distance((Vector2)newPos, (Vector2)home.transform.position) > 7.0f)

@@ -11,7 +11,7 @@ public class GM_CubeControl : MonoBehaviour
 
     private float timer, seconds;
     int sphereRand;
-    float randInterval, randInterval2, randChance, randDuration;
+    float randInterval, randChance, randDuration;
     public Material[] materials;
 
     public GameObject sphereL, sphereM, sphereR;
@@ -20,7 +20,6 @@ public class GM_CubeControl : MonoBehaviour
     int points;
 
     private GazeAware _gazeAware_sp1, _gazeAware_sp2, _gazeAware_sp3;
-    GazePoint gazePoint_sp1, gazePoint_sp2, gazePoint_sp3;
 
     GameObject home, spawner;
     Text hp_label, hp_text;
@@ -106,6 +105,7 @@ public class GM_CubeControl : MonoBehaviour
         if (sphereL.GetComponent<GazeAware>().HasGazeFocus)
         {
             //Debug.Log("found it");
+            //GazePoint gazePoint_sp1;
             //gazePoint_sp1 = EyeTracking.GetGazePoint();
             //transform.Rotate(Vector3.forward);
             cube.transform.Rotate(Vector3.right);
@@ -123,6 +123,7 @@ public class GM_CubeControl : MonoBehaviour
         if (_gazeAware_sp1.HasGazeFocus)
         {
             //Debug.Log("found it");
+            //GazePoint gazePoint_sp1
             //gazePoint_sp1 = EyeTracking.GetGazePoint();
             //transform.Rotate(Vector3.forward);
             cube.transform.Rotate(Vector3.forward);
@@ -137,6 +138,7 @@ public class GM_CubeControl : MonoBehaviour
         if (_gazeAware_sp2.HasGazeFocus)
         {
             //Debug.Log("found it");
+            //GazePoint gazePoint_sp1;
             //gazePoint_sp1 = EyeTracking.GetGazePoint();
             //transform.Rotate(Vector3.forward);
             cube.transform.Rotate(Vector3.right);
@@ -152,6 +154,7 @@ public class GM_CubeControl : MonoBehaviour
         if (_gazeAware_sp3.HasGazeFocus)
         {
             //Debug.Log("found it");
+            //GazePoint gazePoint_sp1;
             //gazePoint_sp1 = EyeTracking.GetGazePoint();
             //transform.Rotate(Vector3.forward);
             cube.transform.Rotate(Vector3.down);

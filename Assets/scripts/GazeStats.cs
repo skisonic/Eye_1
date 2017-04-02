@@ -7,8 +7,6 @@ public class GazeStats : MonoBehaviour {
 
     private GazeAware _gazeAware;
 
-    GazePoint gazePoint;
-
     public bool hasGaze;
 
     void Start()
@@ -20,6 +18,9 @@ public class GazeStats : MonoBehaviour {
     {
         if (_gazeAware.HasGazeFocus)
         {
+
+            GazePoint gazePoint;
+
             gazePoint = EyeTracking.GetGazePoint();
             hasGaze = true;
             //Debug.Log("found it");

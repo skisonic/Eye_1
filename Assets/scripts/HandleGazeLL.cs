@@ -22,7 +22,7 @@ public class HandleGazeLL : MonoBehaviour {
 
         if (_gazeAware.HasGazeFocus){
             hasGaze = true;
-            Debug.Log("do have it");
+            //Debug.Log("do have it");
             // report gazing
         }
         else

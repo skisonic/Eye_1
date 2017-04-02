@@ -11,8 +11,6 @@ public class SpinOnGaze : MonoBehaviour
 {
     private GazeAware _gazeAware;
 
-    GazePoint gazePoint;
-
 
     void Start()
     {
@@ -23,6 +21,8 @@ public class SpinOnGaze : MonoBehaviour
     {
         if (_gazeAware.HasGazeFocus)
         {
+            GazePoint gazePoint;
+
             gazePoint = EyeTracking.GetGazePoint();
             transform.Rotate(Vector3.forward);
             //Debug.Log("found it");

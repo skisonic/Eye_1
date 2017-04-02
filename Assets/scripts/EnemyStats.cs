@@ -10,13 +10,15 @@ public class EnemyStats : MonoBehaviour {
     public gunColor ec; //enemy color
 
     public GameObject home;
+    const float LIFE_TIME = 15.0f;
 
     // lerp size as dropping?
-    Rigidbody rb;
     // Use this for initialization
     void Start()
     {
-        lifetime = 15.0f;
+        Rigidbody rb;
+
+        lifetime = LIFE_TIME;
         rb = GetComponent<Rigidbody>();
         GetComponent<MeshRenderer>().material = gunMats[(int)ec];
     }

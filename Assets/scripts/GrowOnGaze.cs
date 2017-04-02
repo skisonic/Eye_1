@@ -12,9 +12,6 @@ public class GrowOnGaze : MonoBehaviour
 {
     private GazeAware _gazeAware;
 
-    GazePoint gazePoint;
-    
-
     void Start()
     {
         _gazeAware = GetComponent<GazeAware>();
@@ -24,6 +21,8 @@ public class GrowOnGaze : MonoBehaviour
     {
         if (_gazeAware.HasGazeFocus)
         {
+            GazePoint gazePoint;
+
             gazePoint = EyeTracking.GetGazePoint();
             transform.Rotate(Vector3.forward);
             //Debug.Log("found it");

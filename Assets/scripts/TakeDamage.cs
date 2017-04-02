@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 public class TakeDamage : MonoBehaviour {
 
-    Text hp_label, hp_text;
+    Text hp_text;
     public int hp, max_hp;
     float shrinkDmg_wait;
     bool shrinkWait;
@@ -15,6 +15,7 @@ public class TakeDamage : MonoBehaviour {
     public int score = 0;
 	// Use this for initialization
 	void Start () {
+        Text hp_label;
 
         prototype_var = 1;
 

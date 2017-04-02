@@ -6,7 +6,6 @@ public class PingPongOnGaze : MonoBehaviour
 {
     private GazeAware _gazeAware;
 
-    GazePoint gazePoint;
     bool isShrinking; 
 
 
@@ -20,6 +19,8 @@ public class PingPongOnGaze : MonoBehaviour
     {
         if (_gazeAware.HasGazeFocus)
         {
+            GazePoint gazePoint;
+
             gazePoint = EyeTracking.GetGazePoint();
 
 
