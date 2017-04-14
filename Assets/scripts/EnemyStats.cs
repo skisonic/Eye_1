@@ -32,7 +32,6 @@ public class EnemyStats : MonoBehaviour {
         }
         else
         {
-
             Destroy(gameObject);
         }
     }

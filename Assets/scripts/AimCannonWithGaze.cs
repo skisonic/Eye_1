@@ -44,7 +44,7 @@ public class AimCannonWithGaze : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
 
         current_time = Time.time;
@@ -129,15 +129,21 @@ public class AimCannonWithGaze : MonoBehaviour
             //Debug.Log("found it");
         }
         */
-        
-    /*
 
-        if (current_time >= start_time + 10.0f)
-        {
-            aim_interval--;
-            start_time = Time.time;
-            Debug.Log("aim _interval = " + aim_interval);
-        }
-        */
+        /*
+
+            if (current_time >= start_time + 10.0f)
+            {
+                aim_interval--;
+                start_time = Time.time;
+                Debug.Log("aim _interval = " + aim_interval);
+            }
+            */
+    }
+
+    IEnumerator LookAtLerp()
+    {
+        transform.LookAt(new Vector3(hit.point.x, hit.point.y, 0));
+        yield return null;
     }
 }

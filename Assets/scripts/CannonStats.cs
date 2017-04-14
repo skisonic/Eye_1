@@ -23,7 +23,7 @@ public class CannonStats : MonoBehaviour {
     // Use this for initialization
     void Start () {
         mesh = GetComponent<MeshRenderer>();
- 
+        //Physics.IgnoreCollision(Follow_Gaze_Stats.GetComponent<Collider>(), GetComponent<Collider>());
         PowerOn();
 	}
 

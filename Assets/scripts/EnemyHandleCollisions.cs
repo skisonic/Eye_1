@@ -19,6 +19,7 @@ public class EnemyHandleCollisions : MonoBehaviour {
 
     void OnCollisionEnter(Collision coll)
     {
+        //HERES WHERE THE ENEMY DIES   
         if (coll.gameObject.tag == "Bullet")
         {
             BulletStats bs = coll.gameObject.GetComponent<BulletStats>();
@@ -31,5 +32,19 @@ public class EnemyHandleCollisions : MonoBehaviour {
                 Destroy(gameObject);
             }
         }
+        if(coll.gameObject.tag == "Player_Gaze")
+        {
+            Follow_Gaze_Stats fs = coll.gameObject.GetComponent<Follow_Gaze_Stats>();
+
+            if (GetComponent<EnemyStats>().ec.ToString() == fs.gaze_color.ToString())
+            {
+                GameObject death = Instantiate(enemy_death_pf, transform.position, Quaternion.identity) as GameObject;
+                home.GetComponent<TakeDamage>().score++;
+                //Debug.Log("somebody died");
+                Destroy(gameObject);
+            }
+        }
+
     }
+
 }

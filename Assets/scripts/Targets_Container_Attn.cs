@@ -13,7 +13,7 @@ public class Targets_Container_Attn : MonoBehaviour {
     int clickKillCount; //number of clicks to kill a clicker
     HandleGazeLL gazeHandler;
 
-    const float KILL_GAZE_TIME = 60f; //multiply this shit by 60 for now. we wahnt 1.5s issh
+    const float KILL_GAZE_TIME = 45.0f; //multiply this shit by 60 for now. we're using 3/4s rn
     const int KILL_CLICK_COUNT = 3; //number of mouesd clicks required to kill a mouser
 
     int rand;
