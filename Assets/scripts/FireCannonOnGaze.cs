@@ -18,15 +18,20 @@ public class FireCannonOnGaze : MonoBehaviour
     GazePoint gazePoint;
 
     GameObject bullet;
-    
+
     void Start()
     {
         _gazeAware = GetComponent<GazeAware>();
 
-        cannonL = GameObject.Find("CannonL");
-        _gazeAwareL = cannonL.GetComponentInParent<GazeAware>();
-        cannonR = GameObject.Find("CannonR");
-        _gazeAwareR = cannonR.GetComponentInParent<GazeAware>();
+        if (cannonL = GameObject.Find("CannonL"))
+        {
+            _gazeAwareL = cannonL.GetComponentInParent<GazeAware>();
+        }
+
+        if (cannonR = GameObject.Find("CannonR"))
+        {
+            _gazeAwareR = cannonR.GetComponentInParent<GazeAware>();
+        }
     }
 
 

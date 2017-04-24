@@ -103,7 +103,7 @@ public class AimCannonWithGaze : MonoBehaviour
                 Debug.DrawRay(ray3.origin, ray3.direction * 500f, Color.yellow);
                 //Debug.Log("ray3 : hit = " + hit.collider.gameObject.name + " collision = " + hit.point);
                 transform.LookAt(new Vector3(hit.point.x, hit.point.y, 0));
-            }
+            }   
         }
 
 

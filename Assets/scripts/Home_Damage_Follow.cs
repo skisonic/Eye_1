@@ -13,12 +13,13 @@ public class Home_Damage_Follow : MonoBehaviour
     const int MAX_HP = 10;
 
     public int score = 0;
+    Color start_color;
     // Use this for initialization
     void Start()
     {
         Text hp_label;
 
-         hp_label = GameObject.Find("HP_Label_Text").GetComponent<Text>();
+        hp_label = GameObject.Find("HP_Label_Text").GetComponent<Text>();
         hp_text = GameObject.Find("HP_Text").GetComponent<Text>();
         hp = MAX_HP;
         max_hp = MAX_HP;
@@ -26,6 +27,7 @@ public class Home_Damage_Follow : MonoBehaviour
         shrinkDmg_wait = 3.0f;
         shrinkWait = false;
         gm = GameObject.Find("GM_Follow");
+        start_color = GetComponent<Renderer>().material.color;
     }
 
     // Update is called once per frame
@@ -65,13 +67,16 @@ public class Home_Damage_Follow : MonoBehaviour
     {
         if (coll.gameObject.tag == "Enemy_Cube")
         {
-            hp--;
+            ReceiveDamage(1);
+            Destroy(coll.gameObject);
         }
     }
 
     public void ReceiveDamage(int dmg)
     {
         hp -= dmg;
+        StopCoroutine(FlashWhite());
+        StartCoroutine(FlashWhite());
     }
 
     IEnumerator ShrinkWaitPeriod()
@@ -88,4 +93,19 @@ public class Home_Damage_Follow : MonoBehaviour
             yield return null;
         }
     }
+
+    IEnumerator FlashWhite()
+    {
+        Renderer rend;
+        rend = GetComponent<Renderer>();
+        rend.material.color = Color.white;
+        yield return new WaitForSeconds(0.05f);
+        rend.material.color = start_color;
+        yield return new WaitForSeconds(0.01f);
+        rend.material.color = Color.white;
+        yield return new WaitForSeconds(0.05f);
+        rend.material.color = start_color;
+        yield return null;
+    }
+
 }

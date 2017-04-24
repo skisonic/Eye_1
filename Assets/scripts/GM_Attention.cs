@@ -29,7 +29,6 @@ public class GM_Attention : MonoBehaviour {
     private GameObject[] spheresCntnr = new GameObject[maxTargets];
 
 
-    public GameObject[] spheres;
     bool isTargetOn;
     float points, score;
     int numTargets, numGazers, numClickers = 0;
@@ -51,7 +50,7 @@ public class GM_Attention : MonoBehaviour {
 
     void Start()
     {        
-        Application.targetFrameRate = 30;
+        //Application.targetFrameRate = 30;
 
         timer = ROUND_TIME; //seconds before game over occurs
         startTime = Time.time;
@@ -82,7 +81,7 @@ public class GM_Attention : MonoBehaviour {
     }
 
     void getBoundaries()
-    {
+   { 
         left = GetLimits().Left;
         right = GetLimits().Right;
         top = GetLimits().Top;
@@ -92,12 +91,7 @@ public class GM_Attention : MonoBehaviour {
     void myInit()
     {
         //bookingkeeping initation function
-        //ideally removed eventually.
 
-
-        spheres[0].GetComponent<MeshRenderer>().enabled = false;
-        spheres[1].GetComponent<MeshRenderer>().enabled = false;
-        spheres[2].GetComponent<MeshRenderer>().enabled = false;
     }
 
     void CreateSpheres()
@@ -304,56 +298,6 @@ public class GM_Attention : MonoBehaviour {
             RestartRound();
         }
         //timerText.text = timer.ToString();
-    }
-
-    IEnumerator TargetOn()
-    {
-        Debug.Log("entered TargetOn()");
-
-
-        spheres[sphereRand].transform.position = new Vector3(Random.Range(left, right), Random.Range(bottom, top));
-        isTargetOn = true;
-        spheres[sphereRand].GetComponent<MeshRenderer>().enabled = true;
-        spheres[sphereRand].GetComponent<Renderer>().material = materials[2];
-        yield return new WaitForSeconds(randDuration);
-        //spheres[sphereRand].GetComponent<Renderer>().material = materials[1];
-        spheres[sphereRand].GetComponent<MeshRenderer>().enabled = false;
-        points = 0;
-
-        sphereRand = Random.Range(0, 3);
-        randChance = Random.Range(0, 0.4f);
-        isTargetOn = false;
-        yield return null;
-    }
-
-    IEnumerator TargetsOn() //create 2 spheres in random location 
-    {
-        Debug.Log("entered TargetsOn()");
-
-
-        spheres[sphereRand].transform.position = new Vector3(Random.Range(left,right), Random.Range(bottom, top));
-        isTargetOn = true;
-        spheres[sphereRand].GetComponent<MeshRenderer>().enabled = true;
-        spheres[sphereRand].GetComponent<Renderer>().material = materials[2];
-
-
-        spheres[sphereRand2].transform.position = new Vector3(Random.Range(left, right), Random.Range(bottom, top));
-        isTargetOn = true;
-        spheres[sphereRand2].GetComponent<MeshRenderer>().enabled = true;
-        spheres[sphereRand2].GetComponent<Renderer>().material = materials[2];
-        yield return new WaitForSeconds(randDuration);
-
-
-        //spheres[sphereRand].GetComponent<Renderer>().material = materials[1];
-        spheres[sphereRand].GetComponent<MeshRenderer>().enabled = false;
-        spheres[sphereRand2].GetComponent<MeshRenderer>().enabled = false;
-        points = 0;
-
-        sphereRand = Random.Range(0, 3);
-        sphereRand2 = Random.Range(0, 3);
-        randChance = Random.Range(0, 0.4f);
-        isTargetOn = false;
-        yield return null;
     }
 
     void EndGame()

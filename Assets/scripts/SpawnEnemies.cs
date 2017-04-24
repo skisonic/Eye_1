@@ -52,4 +52,28 @@ public class SpawnEnemies : MonoBehaviour {
             yield return new WaitForSeconds(.1f * pauseTime);
         }
     }
+
+    public void DropEnemiesDebug()
+    {
+        numEnemies = 1; //number of enemies that will drop
+        colEnemies = Random.Range(0, 3); // enemy spawn color 
+        scale = Random.Range(1.0f, 3.0f);
+        drag = Random.Range(1.0f, 3.0f) * (scale * 1.25f); //reduce drag inversely by proportion so bigger = slower
+        dragText.text = "drag =" + drag.ToString();
+        scaleText.text = "scale = " + scale.ToString();
+        float pauseTime;
+        //Debug.Log("SpawnEnemies:DropEnemies:: numEnemies:" + numEnemies + " colEnemies:" + colEnemies + " drag:" + drag + " scale:" + scale);
+        for (int i = 0; i <= numEnemies; i++)
+        {
+            //drop some enemies
+            drag_minor = Random.Range(0.0f, 0.5f);
+            GameObject enemy = Instantiate(enemy_pf, transform.position + new Vector3(i * 0.1f, -2.0f, 0), Quaternion.identity) as GameObject;
+            enemy.GetComponent<EnemyStats>().ec = (EnemyStats.gunColor)colEnemies;
+            enemy.GetComponent<Rigidbody>().drag += drag + drag_minor;
+            enemy.transform.localScale *= scale;
+            count++;
+            pauseTime = Random.Range(1.0f, 5.0f);
+        }
+    }
+
 }

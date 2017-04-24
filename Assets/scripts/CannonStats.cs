@@ -23,9 +23,46 @@ public class CannonStats : MonoBehaviour {
     // Use this for initialization
     void Start () {
         mesh = GetComponent<MeshRenderer>();
+
+        if (gameObject.name == "SphereTL") {
+            transform.position = new Vector3(GetLimits().Left + 1.5f, transform.position.y, transform.position.z);
+        }
+        else if (gameObject.name == "SphereTR")
+        {
+            transform.position = new Vector3(GetLimits().Right - 1.5f, transform.position.y, transform.position.z);
+        }
+        else if (gameObject.name == "SphereBL")
+        {
+            transform.position = new Vector3(GetLimits().Left + 1.5f, transform.position.y, transform.position.z);
+        }
+        if (gameObject.name == "SphereBR")
+        {
+            transform.position = new Vector3(GetLimits().Right - 1.5f, transform.position.y, transform.position.z);
+        }
+
         //Physics.IgnoreCollision(Follow_Gaze_Stats.GetComponent<Collider>(), GetComponent<Collider>());
         PowerOn();
 	}
+
+    private Limits GetLimits()
+    {
+        Limits val = new Limits();
+        Vector3 lowerLeft = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, -Camera.main.transform.position.z));
+        Vector3 upperRight = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, -Camera.main.transform.position.z));
+        val.Left = lowerLeft.x;
+        val.Right = upperRight.x;
+        val.Top = upperRight.y - 5f;
+        val.Bottom = lowerLeft.y + 5f;
+        return val;
+    }
+
+    public class Limits
+    {
+        public float Left { get; set; }
+        public float Right { get; set; }
+        public float Top { get; set; }
+        public float Bottom { get; set; }
+    }
 
     // Update is called once per frame
     void Update()
@@ -34,7 +71,7 @@ public class CannonStats : MonoBehaviour {
         if (activeTimer <= 0 && powerOn)
         {
             //Debug.Log("depower " + activeTimer);
-            PowerOff();
+            //PowerOff();
         }
 
         

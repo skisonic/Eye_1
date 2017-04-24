@@ -10,11 +10,13 @@ public class Targets_Container_Attn : MonoBehaviour {
     public Sprite[] target_sprites;
     private int type; //0:look 1:click
     float gazeKillTimer; //amoutn of time to gaze at a gazer
+    float gazeTolTimer; //timer for gazer without reset
     int clickKillCount; //number of clicks to kill a clicker
     HandleGazeLL gazeHandler;
 
     const float KILL_GAZE_TIME = 45.0f; //multiply this shit by 60 for now. we're using 3/4s rn
     const int KILL_CLICK_COUNT = 3; //number of mouesd clicks required to kill a mouser
+    const float GAZE_TOLERANCE = 0.2f;  //time allowed for gaze to fall off a gazer without reset
 
     int rand;
     public bool counted = false;
@@ -24,12 +26,12 @@ public class Targets_Container_Attn : MonoBehaviour {
     float mouseKillTimer = 10.0f;
     int continuousGazeMode; //if 1 gaze moves off gazer, restart timer (requires continues gaze)
     int continuousMouseMode; //if 1 mouse moves off moueser, restart timer (requires continues mouseover)
-
+   
     // Use this for initialization
     void Start () {
 
         continuousGazeMode = 1; 
-        continuousMouseMode = 1; 
+        continuousMouseMode = 1;
     }
 
 
@@ -80,25 +82,33 @@ public class Targets_Container_Attn : MonoBehaviour {
     }
 
 	// Update is called once per frame
-	void Update ()
+	void FixedUpdate ()
     {
-		
-
         if (type == 0)
         {
             if (gazeHandler.hasGaze)
             {
                 gazeKillTimer--;
-                rend.color += new Color(0.0085f, 0.0085f, 0.0085f);
+                gazeTolTimer = GAZE_TOLERANCE;
+                rend.color += new Color(0.1f, 0.1f, 0.1f);
                 //Debug.Log("has gaze from handler. gazeKillTime left = " + gazeKillTimer);
             }
             else
             {
                 if (continuousGazeMode == 1)
                 {
-                    //reset gazer to full.
-                    rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                    gazeKillTimer = KILL_GAZE_TIME;
+                    gazeTolTimer -= Time.deltaTime;
+                    if (gazeTolTimer > 0) //run down tolerance before reset
+                    {
+                        Debug.Log("gaze tol timer = " + gazeTolTimer);
+                        gazeKillTimer--;
+                        rend.color += new Color(0.0085f, 0.0085f, 0.0085f);
+                    }
+                    else //reset gazer to full.
+                    {
+                        rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                        gazeKillTimer = KILL_GAZE_TIME;
+                    }
                 }
             }
 

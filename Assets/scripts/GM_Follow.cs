@@ -64,6 +64,16 @@ public class GM_Follow : MonoBehaviour
             {
                 myTimer += 5.0f;
             }
+
+            if (Input.GetKeyDown(KeyCode.F1)) // Quick add 5HP
+            {
+                home.GetComponent<Home_Damage_Follow>().hp += 5;
+            }
+
+            if (Input.GetKeyDown(KeyCode.End)) //Quick Drop an enemy
+            {
+                spawner.GetComponent<SpawnEnemies>().DropEnemiesDebug();
+            }
         }
 
         if (myTimer <= 0 || home.GetComponent<Home_Damage_Follow>().hp <= 0)
@@ -145,7 +155,7 @@ public class GM_Follow : MonoBehaviour
 
         }
 
-
+        /*
         if (home.GetComponent<GazeAware>().HasGazeFocus)
         {
             home.GetComponent<Renderer>().material = materials[0];
@@ -153,7 +163,7 @@ public class GM_Follow : MonoBehaviour
         else
         {
             home.GetComponent<Renderer>().material = materials[1];
-        }
+        }*/
 
     }
 

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class EnemyHandleCollisons2D : MonoBehaviour {
 
-    public GameObject enemy_death_pf, home;
+    public GameObject enemy_death_pf;
+    GameObject home;
 
     // Use this for initialization
     void Start () {
@@ -18,7 +19,7 @@ public class EnemyHandleCollisons2D : MonoBehaviour {
 	}
 
 
-    void OnCollisionEnter2D(Collision coll)
+    void OnCollisionEnter2D(Collision2D coll)
     {
         Debug.Log("2D Collision recorded");
         //HERES WHERE THE ENEMY DIES   
@@ -36,7 +37,8 @@ public class EnemyHandleCollisons2D : MonoBehaviour {
         }
         if (coll.gameObject.tag == "Player_Gaze")
         {
-            Follow_Gaze_Stats fs = coll.gameObject.GetComponent<Follow_Gaze_Stats>();
+            //Follow_Gaze_Stats fs = coll.gameObject.GetComponent<Follow_Gaze_Stats>();
+            Follow_Gaze_Stats fs = coll.gameObject.GetComponentInParent<Follow_Gaze_Stats>();
 
             if (GetComponentInParent<EnemyStats>().ec.ToString() == fs.gaze_color.ToString())
             {
