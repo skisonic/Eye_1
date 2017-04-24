@@ -31,30 +31,32 @@ public class GM_Attention : MonoBehaviour {
 
     bool isTargetOn;
     float points, score;
-    int numTargets, numGazers, numClickers = 0;
-    int totalTargets = 4;
+    int numTargets, numGazers, numClickers = 0; //number of active targets, and of each type.
+    int totalTargets; //total number of targets per round
     
-    const int maxTargets = 7;
+    const int maxTargets = 7; //limit on max targets for a round
     float pointGrowthRateGaze = 1.05f;
     bool gameRunning = false;
 
-    Text pointText, leftText, timerText, scoreText;
+    Text leftText, rightText, timerText, scoreText, pointText;
 
     float left, right, top, bottom;
-    const int MAX_GAZERS = 3;
-    const int ROUND_TIME = 60;
+    const int MAX_GAZERS = 4;
+    const int GAME_TIME = 60; //total game time
+    const int ROUND_TIME = 60; //amount of time per round (not implemented yet)
     bool debugControls = true;
-
+    int round_count = 0;
 
     // Use this for initialization
 
     void Start()
     {        
-        //Application.targetFrameRate = 30;
+        Application.targetFrameRate = 30;
 
         timer = ROUND_TIME; //seconds before game over occurs
         startTime = Time.time;
         seconds = 0; //actual timer
+        totalTargets = 4; //initial value for total number of targets per round
 
         randInterval = Random.Range(0.3f, 0.6f);
         randChance = Random.Range(0, 0.3f);
@@ -66,38 +68,39 @@ public class GM_Attention : MonoBehaviour {
         target_pf = Resources.Load<GameObject>("prefabs/Attn_Target");
         sphere_pf = Resources.Load<GameObject>("prefabs/Sphere_pf");
         leftText = GameObject.Find("Text").GetComponent<Text>();
-        pointText = GameObject.Find("Text (1)").GetComponent<Text>();
+        rightText = GameObject.Find("Text (1)").GetComponent<Text>();
         timerText = GameObject.Find("Timer").GetComponent<Text>();
         scoreText = GameObject.Find("Score").GetComponent<Text>();
 
         sphereRand = Random.Range(0, 2);
         sphereRand2 = Random.Range(0, 2);
 
+        scoreText.text = "0";
 
-        getBoundaries();
-        CreateSpheres();
-        PlaceSpheres();
+        myInit();
+        NewRound();
         gameRunning = true;
-    }
-
-    void getBoundaries()
-   { 
-        left = GetLimits().Left;
-        right = GetLimits().Right;
-        top = GetLimits().Top;
-        bottom = GetLimits().Bottom;
     }
 
     void myInit()
     {
         //bookingkeeping initation function
-
+ 
     }
 
     void CreateSpheres()
     {
         int rand, type;
         int minGazers;
+
+        if(round_count <= maxTargets)
+        {
+            totalTargets = round_count;
+        }
+        else
+        {
+            totalTargets = maxTargets;
+        }
 
         numTargets = 0;
         numGazers = 0;
@@ -176,9 +179,6 @@ public class GM_Attention : MonoBehaviour {
 
     void PlaceSpheres() //this function moves the spheres (for some reason) but it used to ensure no overlaps
     {
-
-        getBoundaries();
-
         for (int i = 0; i < totalTargets; i++) //this bit of code generates a spehere and checks that it doesnt collide with the last sphere created.
         {
 
@@ -231,12 +231,7 @@ public class GM_Attention : MonoBehaviour {
 
         if (debugControls)
         {
-            if (Input.GetKeyDown(KeyCode.Backspace)) //Quick Get boundaries
-            {
-                getBoundaries();
-            }
-
-            if (Input.GetKeyDown(KeyCode.PageUp))
+            if (Input.GetKeyDown(KeyCode.PageUp)) // Quick add 5second to timer
             {
                 timer += 5.0f;
             }
@@ -274,8 +269,12 @@ public class GM_Attention : MonoBehaviour {
                     */
                 }
 
+
+
+                /*
                 for(int i = 0; i < totalTargets; i++)
                 {
+                    //check if gameobject is destroyed and sub 1 from the stack and add a point. 
                     Targets_Container_Attn target = spheresCntnr[i].GetComponent<Targets_Container_Attn>();
                     if (!spheresCntnr[i].gameObject.activeInHierarchy && target.counted == false)
                     {
@@ -285,40 +284,70 @@ public class GM_Attention : MonoBehaviour {
                         numTargets--;
                         //Debug.Log("one down. numtargetrs = " + numTargets);
                     }
-                }
-
-                //check if gameobject is destroyed and sub 1 from the stack and add a point. 
-                //check if all gameobejcts are destroyed and start a new round.
+                }*/
             }
         }
 
         timerText.text = (timer - seconds).ToString();
-        if(numTargets <= 0)
+        if(numTargets <= 0) //if all gameobejcts are destroyed and start a new round.
+
         {
-            RestartRound();
+            NewRound();
         }
         //timerText.text = timer.ToString();
     }
+
+    public void UpdateOnTargetDeath(int value)
+    {
+
+
+        points += value;
+        scoreText.text = points.ToString();
+        numTargets--;
+        Debug.Log("points = " + points + "value was + " + value);
+
+        /*
+        for (int i = 0; i < totalTargets; i++)
+        {
+            Targets_Container_Attn target = spheresCntnr[i].GetComponent<Targets_Container_Attn>();
+            if (!spheresCntnr[i].gameObject.activeInHierarchy && target.counted == false)
+            {
+                points += target.ReturnPoints();
+                scoreText.text = points.ToString();
+                target.counted = true;
+                numTargets--;
+                //Debug.Log("one down. numtargetrs = " + numTargets);
+            }
+        }*/
+    }
+
+    void NewRound()
+    {
+        round_count++;
+        Debug.Log("round count" + round_count);
+        //Debug.Log("entered: RestartRound()");
+        getBoundaries();
+        CreateSpheres();
+        PlaceSpheres();
+    }
+
 
     void EndGame()
     {
         Debug.Log("entered EndGame()");
 
         StopAllCoroutines();
-        leftText.text = "Game Over. Score: ";
-        pointText.text = score.ToString();
-        scoreText.text = "";
+        leftText.text = "GAME";
+        rightText.text = "OVER";
         isTargetOn = false;
         gameRunning = false;
-        seconds = 0;
-
     }
 
     void RestartGame()
     {
         StopAllCoroutines();
 
-        timer = ROUND_TIME; //game over time
+        timer = GAME_TIME; //game over time
         startTime = Time.time;
         seconds = 0;
 
@@ -331,18 +360,20 @@ public class GM_Attention : MonoBehaviour {
         randDuration = Random.Range(1.3f, 2.0f);
 
         leftText.text = "GAZE";
-        pointText.text = "CLICK";
+        rightText.text = "CLICK";
+        scoreText.text = "0";
+
         timerText.text = timer.ToString();
         PlaceSpheres();
         gameRunning = true;
     }
 
-    void RestartRound()
+    void getBoundaries()
     {
-        //Debug.Log("entered: RestartRound()");
-        getBoundaries();
-        CreateSpheres();
-        PlaceSpheres();
+        left = GetLimits().Left;
+        right = GetLimits().Right;
+        top = GetLimits().Top;
+        bottom = GetLimits().Bottom;
     }
 
 

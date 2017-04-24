@@ -19,6 +19,7 @@ public class Targets_Container_Attn : MonoBehaviour {
     const float GAZE_TOLERANCE = 0.2f;  //time allowed for gaze to fall off a gazer without reset
 
     int rand;
+    int value;
     public bool counted = false;
     SpriteRenderer rend;
 
@@ -26,10 +27,12 @@ public class Targets_Container_Attn : MonoBehaviour {
     float mouseKillTimer = 10.0f;
     int continuousGazeMode; //if 1 gaze moves off gazer, restart timer (requires continues gaze)
     int continuousMouseMode; //if 1 mouse moves off moueser, restart timer (requires continues mouseover)
-   
+
+    private GM_Attention gm;
     // Use this for initialization
     void Start () {
 
+        gm = GameObject.Find("GameManager").GetComponent<GM_Attention>();
         continuousGazeMode = 1; 
         continuousMouseMode = 1;
     }
@@ -65,17 +68,20 @@ public class Targets_Container_Attn : MonoBehaviour {
             rend.sprite = target_sprites[0]; //0 = red = gaze
             rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
             gazeKillTimer = KILL_GAZE_TIME;
+            value = 3;
         }
         else if (type_in == 1)
         {
             rend.sprite = target_sprites[1]; //1 = orange = click
             rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
             clickKillCount = KILL_CLICK_COUNT;
+            value = 1;
         }
         else
         {
             rend.sprite = target_sprites[1]; //1 = orange = click
             clickKillCount = KILL_CLICK_COUNT;
+            value = 1;
             Debug.Log("Error Type_in param: defaulting to 1");
         }
         type = type_in;
@@ -84,7 +90,7 @@ public class Targets_Container_Attn : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-        if (type == 0)
+        if (type == 0) //gazer
         {
             if (gazeHandler.hasGaze)
             {
@@ -100,7 +106,7 @@ public class Targets_Container_Attn : MonoBehaviour {
                     gazeTolTimer -= Time.deltaTime;
                     if (gazeTolTimer > 0) //run down tolerance before reset
                     {
-                        Debug.Log("gaze tol timer = " + gazeTolTimer);
+                        //Debug.Log("gaze tol timer = " + gazeTolTimer);
                         gazeKillTimer--;
                         rend.color += new Color(0.0085f, 0.0085f, 0.0085f);
                     }
@@ -114,11 +120,12 @@ public class Targets_Container_Attn : MonoBehaviour {
 
             if (gazeKillTimer <= 0)
             {
+                gm.UpdateOnTargetDeath(value);
                 gameObject.SetActive(false);
                 //Destroy(gameObject);
             }
         }
-        else if (type == 1)
+        else if (type == 1) //mouser
         {
 
             if (mouseInputMode == 0)
@@ -178,6 +185,7 @@ public class Targets_Container_Attn : MonoBehaviour {
 
             if (clickKillCount <= 0)
             {
+                gm.UpdateOnTargetDeath(value);
                 gameObject.SetActive(false);
                 //Destroy(gameObject);
             }

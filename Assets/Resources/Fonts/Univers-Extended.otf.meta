@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 8088c26d2928b09479d63f8b89aa4cfe
+timeCreated: 1493072129
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Univers
+  fontNames:
+  - Univers
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
