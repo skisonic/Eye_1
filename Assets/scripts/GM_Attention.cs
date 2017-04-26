@@ -31,6 +31,7 @@ public class GM_Attention : MonoBehaviour {
 
     bool isTargetOn;
     float points, score;
+    float roundCompleteTime;
     int numTargets, numGazers, numClickers = 0; //number of active targets, and of each type.
     int totalTargets; //total number of targets per round
     
@@ -42,7 +43,8 @@ public class GM_Attention : MonoBehaviour {
 
     float left, right, top, bottom;
     const int MAX_GAZERS = 4;
-    const int GAME_TIME = 60; //total game time
+    [Tooltip("Total game time")]
+    public int GAME_TIME = 45;  
     const int ROUND_TIME = 60; //amount of time per round (not implemented yet)
     bool debugControls = true;
     int round_count = 0;
@@ -53,10 +55,10 @@ public class GM_Attention : MonoBehaviour {
     {        
         Application.targetFrameRate = 30;
 
-        timer = ROUND_TIME; //seconds before game over occurs
+        timer = GAME_TIME; //seconds before game over occurs
         startTime = Time.time;
         seconds = 0; //actual timer
-        totalTargets = 4; //initial value for total number of targets per round
+        totalTargets = 1; //initial value for total number of targets per round
 
         randInterval = Random.Range(0.3f, 0.6f);
         randChance = Random.Range(0, 0.3f);
@@ -286,14 +288,16 @@ public class GM_Attention : MonoBehaviour {
                     }
                 }*/
             }
+            if (numTargets <= 0) //if all gameobejcts are destroyed and start a new round.
+
+            {
+                roundCompleteTime = seconds;
+                Debug.Log("Completed round " + round_count + " in " + roundCompleteTime + "seconds");
+                NewRound();
+            }
         }
 
         timerText.text = (timer - seconds).ToString();
-        if(numTargets <= 0) //if all gameobejcts are destroyed and start a new round.
-
-        {
-            NewRound();
-        }
         //timerText.text = timer.ToString();
     }
 
@@ -304,7 +308,7 @@ public class GM_Attention : MonoBehaviour {
         points += value;
         scoreText.text = points.ToString();
         numTargets--;
-        Debug.Log("points = " + points + "value was + " + value);
+        //Debug.Log("points = " + points + "value was + " + value);
 
         /*
         for (int i = 0; i < totalTargets; i++)
@@ -324,6 +328,7 @@ public class GM_Attention : MonoBehaviour {
     void NewRound()
     {
         round_count++;
+        roundCompleteTime = 0; 
         Debug.Log("round count" + round_count);
         //Debug.Log("entered: RestartRound()");
         getBoundaries();
