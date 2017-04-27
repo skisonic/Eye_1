@@ -238,11 +238,12 @@ public class GM_Attention : MonoBehaviour {
             {
                 if (numTargets <= 0) //if all gameobejcts are destroyed and start a new round.
                 {
-                    roundCompleteTime = myTimer;
+                    //roundCompleteTime = myTimer;
                     Debug.Log("Completed round " + round_count + " in " + roundCompleteTime.ToString("F4") + "seconds");
                     NewRound();
                 }
-                myTimer -= (Time.deltaTime);
+                myTimer -= Time.deltaTime;
+                roundCompleteTime += Time.deltaTime;
                 timerText.text = myTimer.ToString("F1");
             }
         }
