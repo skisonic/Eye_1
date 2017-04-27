@@ -18,7 +18,7 @@ using UnityEngine.UI;
 public class GM_Attention : MonoBehaviour {
 
 
-    private float timer, seconds, startTime;
+    private float timer, startTime, myTimer, roundTimer;
     int sphereRand, sphereRand2;
     float randInterval, randChance, randDuration;
     public Material[] materials;
@@ -33,6 +33,7 @@ public class GM_Attention : MonoBehaviour {
     float points, score;
     float roundCompleteTime;
     int numTargets, numGazers, numClickers = 0; //number of active targets, and of each type.
+    int killedGazers, killedMousers; //counters for number of killed targets for a round
     int totalTargets; //total number of targets per round
     
     const int maxTargets = 7; //limit on max targets for a round
@@ -47,7 +48,7 @@ public class GM_Attention : MonoBehaviour {
     public int GAME_TIME = 45;  
     const int ROUND_TIME = 60; //amount of time per round (not implemented yet)
     bool debugControls = true;
-    int round_count = 0;
+    int round_count = 0; // counter for number of rounds completed (current round)
 
     // Use this for initialization
 
@@ -55,9 +56,9 @@ public class GM_Attention : MonoBehaviour {
     {        
         Application.targetFrameRate = 30;
 
-        timer = GAME_TIME; //seconds before game over occurs
+        timer = GAME_TIME; //time before game over occurs
+        myTimer = GAME_TIME;
         startTime = Time.time;
-        seconds = 0; //actual timer
         totalTargets = 1; //initial value for total number of targets per round
 
         randInterval = Random.Range(0.3f, 0.6f);
@@ -223,23 +224,22 @@ public class GM_Attention : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
-        if (Input.GetKeyDown(KeyCode.Delete)) //Quick Restart
-        {
-            EndGame();
-            RestartGame();
-            Debug.Log("restart ");
-
-        }
-
         if (debugControls)
         {
             if (Input.GetKeyDown(KeyCode.PageUp)) // Quick add 5second to timer
             {
                 timer += 5.0f;
+                Debug.Log("Added 5s to timer");
+            }
+            if (Input.GetKeyDown(KeyCode.Delete)) //Quick Restart
+            {
+                EndGame();
+                RestartGame();
+                Debug.Log("restart ");
             }
         }
 
-        if (seconds >= timer && gameRunning)
+        if (myTimer <= 0 && gameRunning)
         {
             //end game
             //EndGame();
@@ -250,55 +250,17 @@ public class GM_Attention : MonoBehaviour {
         {
             if (gameRunning)
             {
-                if ( (Mathf.Floor(Time.time) - startTime ) >= seconds)
+                if (numTargets <= 0) //if all gameobejcts are destroyed and start a new round.
                 {
-
-                    seconds++;
-                    /*
-                    //Debug.Log("seconds = " + seconds + "timer = " + timer);
-                    if (randChance < randInterval && isTargetOn == false)
-                    {
-                        StopAllCoroutines();
-                        if (seconds <= 3) //hacky way of starting phase 2
-                        {
-                            //StartCoroutine(TargetOn());
-                        }else
-                        {
-                            //StartCoroutine(TargetsOn());
-                        }
-                    }
-                    randChance = Random.Range(0, 0.4f);
-                    */
+                    roundCompleteTime = myTimer;
+                    Debug.Log("Completed round " + round_count + " in " + roundCompleteTime.ToString("F4") + "seconds");
+                    NewRound();
                 }
-
-
-
-                /*
-                for(int i = 0; i < totalTargets; i++)
-                {
-                    //check if gameobject is destroyed and sub 1 from the stack and add a point. 
-                    Targets_Container_Attn target = spheresCntnr[i].GetComponent<Targets_Container_Attn>();
-                    if (!spheresCntnr[i].gameObject.activeInHierarchy && target.counted == false)
-                    {
-                        points += target.ReturnPoints();
-                        scoreText.text = points.ToString();
-                        target.counted = true;
-                        numTargets--;
-                        //Debug.Log("one down. numtargetrs = " + numTargets);
-                    }
-                }*/
-            }
-            if (numTargets <= 0) //if all gameobejcts are destroyed and start a new round.
-
-            {
-                roundCompleteTime = seconds;
-                Debug.Log("Completed round " + round_count + " in " + roundCompleteTime + "seconds");
-                NewRound();
+                myTimer -= (Time.deltaTime);
+                Debug.Log("myTimer " + myTimer);
+                timerText.text = myTimer.ToString("F1");
             }
         }
-
-        timerText.text = (timer - seconds).ToString();
-        //timerText.text = timer.ToString();
     }
 
     public void UpdateOnTargetDeath(int value)
@@ -323,6 +285,15 @@ public class GM_Attention : MonoBehaviour {
                 //Debug.Log("one down. numtargetrs = " + numTargets);
             }
         }*/
+    }
+
+    IEnumerator StartNewRound()
+    {
+        //diplay text for just long enough to read it.
+        //clear that text
+        Debug.Log("StartNewRound: round complete time" + roundCompleteTime);
+        yield return new WaitForSeconds(.3f);
+        NewRound();
     }
 
     void NewRound()
@@ -354,7 +325,6 @@ public class GM_Attention : MonoBehaviour {
 
         timer = GAME_TIME; //game over time
         startTime = Time.time;
-        seconds = 0;
 
         score = 0;
         points = 0;
