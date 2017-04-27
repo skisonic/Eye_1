@@ -13,57 +13,46 @@ using UnityEngine.UI;
 /// 
 ///  create 2 types of targets - those to look at and those to click for points
 /// 
+/// 
+/// actually none of that is true anymore pretty much - 04/26/2017
 /// </summary>
 
 public class GM_Attention : MonoBehaviour {
 
 
-    private float timer, startTime, myTimer, roundTimer;
-    int sphereRand, sphereRand2;
-    float randInterval, randChance, randDuration;
+    private float timer, startTime, myTimer, roundTimer, roundStartTime;
+    float roundCompleteTime;
     public Material[] materials;
 
-
-    GameObject sphereL, sphereM, sphereR;
     protected GameObject sphere_pf, target_pf;
-    private GameObject[] spheresCntnr = new GameObject[maxTargets];
+    private GameObject[] spheresCntnr = new GameObject[maxTargets]; //target container
 
-
-    bool isTargetOn;
     float points, score;
-    float roundCompleteTime;
     int numTargets, numGazers, numClickers = 0; //number of active targets, and of each type.
     int killedGazers, killedMousers; //counters for number of killed targets for a round
     int totalTargets; //total number of targets per round
-    
-    const int maxTargets = 7; //limit on max targets for a round
-    float pointGrowthRateGaze = 1.05f;
-    bool gameRunning = false;
 
-    Text leftText, rightText, timerText, scoreText, pointText;
+    int round_count = 0; // counter for number of rounds completed (current round)
+    bool gameRunning = false; 
 
-    float left, right, top, bottom;
+    const int maxTargets = 7; //limit on max targets for a round (not implented yet)
     const int MAX_GAZERS = 4;
     [Tooltip("Total game time")]
     public int GAME_TIME = 45;  
     const int ROUND_TIME = 60; //amount of time per round (not implemented yet)
-    bool debugControls = true;
-    int round_count = 0; // counter for number of rounds completed (current round)
 
+    Text leftText, rightText, timerText, scoreText, pointText;
+    float left, right, top, bottom; //boundaries 
+
+    bool debugControls = true; //debug stuff found in update
     // Use this for initialization
-
     void Start()
     {        
         Application.targetFrameRate = 30;
 
-        timer = GAME_TIME; //time before game over occurs
-        myTimer = GAME_TIME;
+        myTimer = GAME_TIME; //time before game over occurs
         startTime = Time.time;
         totalTargets = 1; //initial value for total number of targets per round
-
-        randInterval = Random.Range(0.3f, 0.6f);
-        randChance = Random.Range(0, 0.3f);
-        randDuration = Random.Range(1.3f, 2.0f);
 
         score = 0;
         points = 0;
@@ -74,9 +63,6 @@ public class GM_Attention : MonoBehaviour {
         rightText = GameObject.Find("Text (1)").GetComponent<Text>();
         timerText = GameObject.Find("Timer").GetComponent<Text>();
         scoreText = GameObject.Find("Score").GetComponent<Text>();
-
-        sphereRand = Random.Range(0, 2);
-        sphereRand2 = Random.Range(0, 2);
 
         scoreText.text = "0";
 
@@ -96,7 +82,7 @@ public class GM_Attention : MonoBehaviour {
         int rand, type;
         int minGazers;
 
-        if(round_count <= maxTargets)
+        if(round_count <= maxTargets) //limit num targetse to same as round or less than max lame
         {
             totalTargets = round_count;
         }
@@ -163,6 +149,7 @@ public class GM_Attention : MonoBehaviour {
 
             if (spheresCntnr[i].GetComponent<HandleCollisionLL>().sphere_coll == true)
             {
+                //THIS NEEDS TO BE ADDRESSED 
                 Debug.Log("bonk");
                 //i--;
             }
@@ -228,14 +215,13 @@ public class GM_Attention : MonoBehaviour {
         {
             if (Input.GetKeyDown(KeyCode.PageUp)) // Quick add 5second to timer
             {
-                timer += 5.0f;
-                Debug.Log("Added 5s to timer");
+                myTimer += 5.0f;
+                Debug.Log("Added 5s to timer. Timer = " + myTimer);
             }
             if (Input.GetKeyDown(KeyCode.Delete)) //Quick Restart
             {
                 EndGame();
                 RestartGame();
-                Debug.Log("restart ");
             }
         }
 
@@ -257,37 +243,32 @@ public class GM_Attention : MonoBehaviour {
                     NewRound();
                 }
                 myTimer -= (Time.deltaTime);
-                Debug.Log("myTimer " + myTimer);
                 timerText.text = myTimer.ToString("F1");
             }
         }
     }
 
-    public void UpdateOnTargetDeath(int value)
+    public void UpdateOnTargetDeath(int value) // public function for target to talkback to GM (ugly but w/e)
     {
-
-
         points += value;
         scoreText.text = points.ToString();
         numTargets--;
-        //Debug.Log("points = " + points + "value was + " + value);
-
-        /*
-        for (int i = 0; i < totalTargets; i++)
+        if (value == 1)
         {
-            Targets_Container_Attn target = spheresCntnr[i].GetComponent<Targets_Container_Attn>();
-            if (!spheresCntnr[i].gameObject.activeInHierarchy && target.counted == false)
-            {
-                points += target.ReturnPoints();
-                scoreText.text = points.ToString();
-                target.counted = true;
-                numTargets--;
-                //Debug.Log("one down. numtargetrs = " + numTargets);
-            }
-        }*/
+            killedMousers += 1;
+        }
+        else if (value == 3)
+        {
+            killedGazers += 3;
+        }
+        else
+        {
+            Debug.Log("Problem updating killed target type");
+        }
+        //Debug.Log("points = " + points + "value was + " + value);
     }
 
-    IEnumerator StartNewRound()
+    IEnumerator StartNewRound() //not yet implemented
     {
         //diplay text for just long enough to read it.
         //clear that text
@@ -296,49 +277,45 @@ public class GM_Attention : MonoBehaviour {
         NewRound();
     }
 
-    void NewRound()
+    void NewRound() //starts new round including first round
     {
         round_count++;
-        roundCompleteTime = 0; 
-        Debug.Log("round count" + round_count);
-        //Debug.Log("entered: RestartRound()");
+        roundCompleteTime = 0;
+        roundStartTime = 0;
+        Debug.Log("NewRound(): round count " + round_count);
         getBoundaries();
         CreateSpheres();
         PlaceSpheres();
     }
 
 
-    void EndGame()
+    void EndGame() //Ends the game
     {
-        Debug.Log("entered EndGame()");
+        Debug.Log("EndGame(): entered EndGame()");
 
         StopAllCoroutines();
+        gameRunning = false;
         leftText.text = "GAME";
         rightText.text = "OVER";
-        isTargetOn = false;
-        gameRunning = false;
     }
 
-    void RestartGame()
+    void RestartGame() //Quick Restart Game. Probably needs to be fixed
     {
+        Debug.Log("RestartGame: restart...");
         StopAllCoroutines();
 
-        timer = GAME_TIME; //game over time
+        myTimer = GAME_TIME; //game over time
         startTime = Time.time;
 
         score = 0;
         points = 0;
 
 
-        randInterval = Random.Range(0.3f, 0.6f);
-        randChance = Random.Range(0, 0.3f);
-        randDuration = Random.Range(1.3f, 2.0f);
-
         leftText.text = "GAZE";
         rightText.text = "CLICK";
         scoreText.text = "0";
 
-        timerText.text = timer.ToString();
+        timerText.text = myTimer.ToString();
         PlaceSpheres();
         gameRunning = true;
     }
