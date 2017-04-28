@@ -68,7 +68,6 @@ public class GM_Attention : MonoBehaviour {
 
         myInit();
         NewRound();
-        gameRunning = true;
     }
 
     void myInit()
@@ -223,6 +222,10 @@ public class GM_Attention : MonoBehaviour {
                 EndGame();
                 RestartGame();
             }
+            if (Input.GetKeyDown(KeyCode.Escape)) //Quick startnewround
+            {
+                StartCoroutine("StartNewRound");
+            }
         }
 
         if (myTimer <= 0 && gameRunning)
@@ -271,10 +274,13 @@ public class GM_Attention : MonoBehaviour {
 
     IEnumerator StartNewRound() //not yet implemented
     {
+        Debug.Log("StartNewRound: round complete time " + roundCompleteTime);
+        gameRunning = false;
+        leftText.text = "Round " + round_count + " completed in " + roundCompleteTime.ToString("F1") + " seconds.";
+        //pause the game.
         //diplay text for just long enough to read it.
         //clear that text
-        Debug.Log("StartNewRound: round complete time" + roundCompleteTime);
-        yield return new WaitForSeconds(.3f);
+        yield return new WaitForSeconds(1.5f);
         NewRound();
     }
 
@@ -283,10 +289,13 @@ public class GM_Attention : MonoBehaviour {
         round_count++;
         roundCompleteTime = 0;
         roundStartTime = 0;
+        leftText.text = "GAZE";
+
         Debug.Log("NewRound(): round count " + round_count);
         getBoundaries();
         CreateSpheres();
         PlaceSpheres();
+        gameRunning = true;
     }
 
 
