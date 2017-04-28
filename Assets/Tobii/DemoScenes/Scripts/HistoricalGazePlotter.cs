@@ -7,7 +7,7 @@ using System.IO;
 /// toggle is on, with a single bubble sprite with smoother movements.
 /// </summary>
 [RequireComponent(typeof(SpriteRenderer))]
-public class GazePlotter : MonoBehaviour
+public class HistoricalGazePlotter : MonoBehaviour
 {
     [Range(3.0f, 15.0f), Tooltip("Number of gaze points in point cloud.")]
     public int PointCloudSize = 10;
@@ -19,8 +19,7 @@ public class GazePlotter : MonoBehaviour
     public float VisualizationDistance = 10f;
     [Range(0.1f, 1.0f), Tooltip("How heavy filtering to apply to gaze point bubble movements. 0.1f is most responsive, 1.0f is least responsive.")]
     public float FilterSmoothingFactor = 0.15f;
-    public bool dataCapture;
-    public string subjectName;
+    public TextAsset dataSet;
 
     private GazePoint       _lastGazePoint = GazePoint.Invalid;
 
@@ -36,8 +35,9 @@ public class GazePlotter : MonoBehaviour
     private bool            _hasHistoricPoint;
     private Vector3         _historicPoint;
 
-    private string filename;
-    private StreamWriter outputStream;
+    private TextReader textReader;
+    private GazePoint curGazePoint;
+
     public bool UseFilter
     {
         get { return _useFilter; }
@@ -54,34 +54,28 @@ public class GazePlotter : MonoBehaviour
         _gazeBubbleRenderer = GetComponent<SpriteRenderer>();
         UpdateGazeBubbleVisibility();
 
-        if(dataCapture) {
-			DirectoryInfo dir = System.IO.Directory.CreateDirectory(Application.dataPath + "/data/" + System.DateTime.Now.ToString("yy-MMM-dd"));
-			string filename = Application.dataPath + "/data/" + dir.Name + "/" + System.DateTime.Now.ToString("hh_mm_ss");
-			outputStream = new StreamWriter(filename, true);
-			string topRow = "";
-			topRow = "x\ty\tid\ttimestamp";
-			outputStream.WriteLine(topRow);
-        }
+		textReader = new StringReader(dataSet.text);
+		textReader.ReadLine();
+		curGazePoint = ReadGazePoint();
     }
 
     void Update()
     {
-        GazePoint gazePoint = EyeTracking.GetGazePoint();
 
-        if (gazePoint.SequentialId > _lastGazePoint.SequentialId &&
-            gazePoint.IsWithinScreenBounds)
+        if (curGazePoint.SequentialId > _lastGazePoint.SequentialId &&
+            curGazePoint.IsWithinScreenBounds)
         {
             if (UseFilter)
             {
-                UpdateGazeBubblePosition(gazePoint);
+                UpdateGazeBubblePosition(curGazePoint);
             }
             else
             {
-                UpdateGazePointCloud(gazePoint);
+                UpdateGazePointCloud(curGazePoint);
             }
 
-            RecordGazePoint(gazePoint);
-            _lastGazePoint = gazePoint;
+            _lastGazePoint = curGazePoint;
+            curGazePoint = ReadGazePoint();
         }
 
         UpdateGazePointCloudVisibility();
@@ -187,13 +181,9 @@ public class GazePlotter : MonoBehaviour
         return smoothedPoint;
     }
 
-    public void RecordGazePoint(GazePoint newPoint) {
-		string output = newPoint.Screen.x.ToString() + "\t" + newPoint.Screen.y.ToString() + "\t"
-								 + newPoint.SequentialId.ToString() + "\t" + newPoint.Timestamp.ToString();
-		outputStream.WriteLine(output);
-    }
-
-    void OnApplicationExit() {
-		outputStream.Close();
+    GazePoint ReadGazePoint() {
+		textReader.ReadLine();
+		string[] firstPoint = textReader.ReadLine().Split('\t');
+		return new GazePoint(new Vector2(float.Parse(firstPoint[0]), float.Parse(firstPoint[1])), double.Parse(firstPoint[2]),float.Parse(firstPoint[3]));
     }
 }
