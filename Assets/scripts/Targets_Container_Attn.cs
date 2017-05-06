@@ -160,20 +160,45 @@ public class Targets_Container_Attn : MonoBehaviour {
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
-                    RaycastHit[] hits;
-
-                    hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition), 100.0F);
-                    for (int i = 0; i < hits.Length; i++)
+                    Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit);
+                    if (hit.collider.gameObject == gameObject)
                     {
-                        hit = hits[i];
-                        Debug.Log("hit " + hit.collider.gameObject.name);
+                        mouseKillTimer--;
+
+                        if (mouseKillTimer <= 0)
+                        {
+                            clickKillCount--;
+                            mouseKillTimer = 10.0f;
+                            rend.color += new Color(0.15f, 0.15f, 0.15f);
+                        }
                     }
 
                 }
 
+                // Casts the ray and get all objects hit
+                //success, to be implemented later along with gazer
+                //needs a bool and some sort of overall check or something
+                /*
+                RaycastHit[] hits;
+                hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition), 100.0F);
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    //should get overlapping mouser
+                    if (hits[i].collider.gameObject == gameObject)
+                    {
+                        mouseKillTimer--;
+
+                        if (mouseKillTimer <= 0)
+                        {
+                            clickKillCount--;
+                            mouseKillTimer = 10.0f;
+                            rend.color += new Color(0.15f, 0.15f, 0.15f);
+                        }
+                    }
+                }
+                */
+
                 // Casts the ray and get the first game object hit
-                //Physics.Raycast(ray, out hit);
-                //Debug.Log("This hit " + hit.collider.gameObject.name + " at " + hit.point);
 
                 if (Physics.Raycast(ray, out hit))
                 {
