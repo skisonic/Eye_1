@@ -7,6 +7,7 @@ public class EnemyStats : MonoBehaviour {
 
     public enum gunColor { red, green, blue, yellow };
     public Material[] gunMats;
+    public Material[] spriteMats;
     public gunColor ec; //enemy color
 
     public GameObject enemy_death_pf;
@@ -20,6 +21,7 @@ public class EnemyStats : MonoBehaviour {
     void Start()
     {
         Rigidbody rb;
+        SpriteRenderer srend;
         home = GameObject.Find("Home");
         lifetime = LIFE_TIME;
         rb = GetComponent<Rigidbody>();
@@ -29,6 +31,8 @@ public class EnemyStats : MonoBehaviour {
             hp = 1;
         start_color = GetComponent<Renderer>().material.color;
 
+        srend = GetComponentInChildren<SpriteRenderer>();
+        srend.sprite = GameObject.Find("Spawner").GetComponent<SpawnEnemies>().enemySprites[(int)ec];
         //Debug.Log("drag = " + rb.drag + "hp = " + hp);
     }
 
@@ -67,14 +71,30 @@ public class EnemyStats : MonoBehaviour {
     IEnumerator FlashWhite()
     {
         Renderer rend;
+        SpriteRenderer srend;
         rend = GetComponent<Renderer>();
-        rend.material.color = Color.white;
-        yield return new WaitForSeconds(0.02f);
-        rend.material.color = start_color;
-        yield return new WaitForSeconds(0.01f);
-        rend.material.color = Color.white;
-        yield return new WaitForSeconds(0.02f);
-        rend.material.color = start_color;
-        yield return null;
+        srend = GetComponentInChildren<SpriteRenderer>();
+        if (rend.enabled)
+        {
+            rend.material.color = Color.white;
+            yield return new WaitForSeconds(0.02f);
+            rend.material.color = start_color;
+            yield return new WaitForSeconds(0.01f);
+            rend.material.color = Color.white;
+            yield return new WaitForSeconds(0.02f);
+            rend.material.color = start_color;
+            yield return null;
+        }
+        if (srend.enabled)
+        {
+            srend.material = spriteMats[1];
+            yield return new WaitForSeconds(0.02f);
+            srend.material = spriteMats[0];
+            yield return new WaitForSeconds(0.01f);
+            srend.material = spriteMats[1];
+            yield return new WaitForSeconds(0.02f);
+            srend.material = spriteMats[0];
+            yield return null;
+        }
     }
 }

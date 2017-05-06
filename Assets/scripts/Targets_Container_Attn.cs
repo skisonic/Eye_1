@@ -94,6 +94,9 @@ public class Targets_Container_Attn : MonoBehaviour {
         {
             if (gazeHandler.hasGaze)
             {
+                clickKillCount--;
+                rend.color += new Color(0.15f, 0.15f, 0.15f);
+
                 gazeKillTimer--;
                 gazeTolTimer = GAZE_TOLERANCE;
                 rend.color += new Color(0.1f, 0.1f, 0.1f);
@@ -127,7 +130,6 @@ public class Targets_Container_Attn : MonoBehaviour {
         }
         else if (type == 1) //mouser
         {
-
             if (mouseInputMode == 0)
             {
                 // require 5 clicks to kill
@@ -135,6 +137,7 @@ public class Targets_Container_Attn : MonoBehaviour {
                 {
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit hit;
+
                     // Casts the ray and get the first game object hit
                     //Physics.Raycast(ray, out hit);
                     //Debug.Log("This hit " + hit.collider.gameObject.name + " at " + hit.point);
@@ -149,10 +152,25 @@ public class Targets_Container_Attn : MonoBehaviour {
                     }
                 }
 
-            } else if (mouseInputMode == 1)
+            }
+            else if (mouseInputMode == 1)
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
+
+                if (Input.GetKeyDown(KeyCode.Mouse0))
+                {
+                    RaycastHit[] hits;
+
+                    hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition), 100.0F);
+                    for (int i = 0; i < hits.Length; i++)
+                    {
+                        hit = hits[i];
+                        Debug.Log("hit " + hit.collider.gameObject.name);
+                    }
+
+                }
+
                 // Casts the ray and get the first game object hit
                 //Physics.Raycast(ray, out hit);
                 //Debug.Log("This hit " + hit.collider.gameObject.name + " at " + hit.point);

@@ -104,6 +104,7 @@ public class GM_Attention : MonoBehaviour {
 
             spheresCntnr[i].GetComponent<HandleCollisionLL>().current = true;
             spheresCntnr[i].GetComponent<HandleCollisionLL>().index = i + 1;
+            spheresCntnr[i].gameObject.name = "Attn_Target_" + i.ToString();
             numTargets++;
 
 

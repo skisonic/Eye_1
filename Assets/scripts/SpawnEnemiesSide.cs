@@ -2,11 +2,12 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class SpawnEnemies : MonoBehaviour {
+public class SpawnEnemiesSide : MonoBehaviour
+{
 
     public GameObject enemy_pf;
     float interval;
-    int numEnemies,colEnemies;
+    int numEnemies, colEnemies;
     int count;
     float drag, drag_minor, scale;
     public Text dragText, scaleText;
@@ -15,24 +16,26 @@ public class SpawnEnemies : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         interval = 4.0f;
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         if (interval >= 0)
         {
             interval -= Time.deltaTime;
         }
         else
         {
-            StartCoroutine(DropEnemies());
+            StartCoroutine(FireEnemies());
             interval = 7.5f;
         }
     }
 
-    IEnumerator DropEnemies()
+    IEnumerator FireEnemies()
     {
         numEnemies = Random.Range(1, 3); //number of enemies that will drop
         colEnemies = Random.Range(0, 3); // enemy spawn color 

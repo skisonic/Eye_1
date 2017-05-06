@@ -23,7 +23,8 @@ public class EnemyHandleCollisions : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision coll)
-    {    
+    {
+        //Debug.Log("3D collision detected");
         if (coll.gameObject.tag == "Bullet") //  take damage from by bullet.
         {
             BulletStats bs = coll.gameObject.GetComponent<BulletStats>();
@@ -60,9 +61,13 @@ public class EnemyHandleCollisions : MonoBehaviour
 
     }
 
-    void OnTriggerEnter(Collider coll)  // take damage from gaze trigger
+    void OnTriggerEnter(Collider coll)  //*(eworking) take damage from gaze trigger
     {
         Follow_Gaze_Stats fs = coll.gameObject.GetComponent<Follow_Gaze_Stats>();
+
+        //Debug.Log("3D collision trigger");
+
+        //Debug.Log("stats.ec.Tostring() " + stats.ec + " fs.gaze_color.ToString() " + fs.gaze_color);
 
         if (GetComponent<EnemyStats>().ec.ToString() == fs.gaze_color.ToString())
         {

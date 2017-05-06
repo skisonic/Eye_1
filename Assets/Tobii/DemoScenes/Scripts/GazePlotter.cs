@@ -56,8 +56,8 @@ public class GazePlotter : MonoBehaviour
 
         if(dataCapture) {
 			DirectoryInfo dir = System.IO.Directory.CreateDirectory(Application.dataPath + "/data/" + System.DateTime.Now.ToString("yy-MMM-dd"));
-			string filename = Application.dataPath + "/data/" + dir.Name + "/" + System.DateTime.Now.ToString("hh_mm_ss");
-			outputStream = new StreamWriter(filename, true);
+            string filename = Application.dataPath + "/data/" + dir.Name + "/" + System.DateTime.Now.ToString("hh_mm_ss") + subjectName;
+            outputStream = new StreamWriter(filename, true);
 			string topRow = "";
 			topRow = "x\ty\tid\ttimestamp";
 			outputStream.WriteLine(topRow);
@@ -80,7 +80,10 @@ public class GazePlotter : MonoBehaviour
                 UpdateGazePointCloud(gazePoint);
             }
 
-            RecordGazePoint(gazePoint);
+            if (dataCapture)
+            {
+                RecordGazePoint(gazePoint);
+            }
             _lastGazePoint = gazePoint;
         }
 
@@ -188,8 +191,8 @@ public class GazePlotter : MonoBehaviour
     }
 
     public void RecordGazePoint(GazePoint newPoint) {
-		string output = newPoint.Screen.x.ToString() + "\t" + newPoint.Screen.y.ToString() + "\t"
-								 + newPoint.SequentialId.ToString() + "\t" + newPoint.Timestamp.ToString();
+		string output = newPoint.Screen.x.ToString("F2") + "\t" + newPoint.Screen.y.ToString("F2") + "\t"
+								 + newPoint.SequentialId.ToString("F7") + "\t" + newPoint.Timestamp.ToString();
 		outputStream.WriteLine(output);
     }
 
