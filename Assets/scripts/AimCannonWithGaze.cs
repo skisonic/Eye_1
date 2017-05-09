@@ -35,6 +35,7 @@ public class AimCannonWithGaze : MonoBehaviour
     int i;
 
     public float lookAtChangeDist, lookLerpSpeed, journeyLength;
+    public GameObject playerBody;
 
     Ray ray, ray2, ray3;
     RaycastHit hit;
@@ -113,9 +114,11 @@ public class AimCannonWithGaze : MonoBehaviour
 
                 }
             }
-            else
+            transform.LookAt(playerBody.transform); //worksish, not smooth
+            if (1 < 0)
             {
-                if (Physics.Raycast(Camera.main.ViewportPointToRay(gazePoint3), out hit, 1000f))
+                int layerMask = 1 << 16;
+                if (Physics.Raycast(Camera.main.ViewportPointToRay(gazePoint3), out hit, 100f, layerMask))
                 {
                     float speed = lookLerpSpeed;
 
