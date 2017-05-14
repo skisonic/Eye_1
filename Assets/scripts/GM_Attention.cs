@@ -28,11 +28,11 @@ public class GM_Attention : MonoBehaviour {
     private GameObject[] spheresCntnr = new GameObject[maxTargets]; //target container
 
     float points, score;
-    int numTargets, numGazers, numClickers = 0; //number of active targets, and of each type.
+    int numTargets, numGazers, numClickers; //number of active targets, and of each type.
     int killedGazers, killedMousers; //counters for number of killed targets for a round
     int totalTargets; //total number of targets per round
 
-    int round_count = 0; // counter for number of rounds completed (current round)
+    int round_count; // counter for number of rounds completed (current round)
     bool gameRunning = false; 
 
     const int maxTargets = 7; //limit on max targets for a round (not implented yet)
@@ -56,6 +56,8 @@ public class GM_Attention : MonoBehaviour {
 
         score = 0;
         points = 0;
+        round_count = 1;
+        numTargets = numGazers = numClickers = 0;
 
         target_pf = Resources.Load<GameObject>("prefabs/Attn_Target");
         sphere_pf = Resources.Load<GameObject>("prefabs/Sphere_pf");
@@ -64,7 +66,7 @@ public class GM_Attention : MonoBehaviour {
         timerText = GameObject.Find("Timer").GetComponent<Text>();
         scoreText = GameObject.Find("Score").GetComponent<Text>();
 
-        scoreText.text = "0";
+        scoreText.text = score.ToString();
 
         myInit();
         NewRound();
@@ -80,8 +82,11 @@ public class GM_Attention : MonoBehaviour {
     {
         int rand, type;
         int minGazers;
+        Vector3 location;
 
-        if(round_count <= maxTargets) //limit num targetse to same as round or less than max lame
+        location = new Vector3(0, 0);
+
+        if (round_count <= maxTargets) //limit num targetse to same as round or less than max lame
         {
             totalTargets = round_count;
         }
@@ -98,9 +103,8 @@ public class GM_Attention : MonoBehaviour {
 
         for (int i = 0; i < totalTargets; i++)
         {
-
-            spheresCntnr[i] = ((GameObject)Instantiate(target_pf, new Vector3(Random.Range(left, right),
-                                                                               Random.Range(bottom, top)), Quaternion.identity));
+   
+            spheresCntnr[i] = ((GameObject)Instantiate(target_pf, location, Quaternion.identity));
 
             spheresCntnr[i].GetComponent<HandleCollisionLL>().current = true;
             spheresCntnr[i].GetComponent<HandleCollisionLL>().index = i + 1;
@@ -112,7 +116,6 @@ public class GM_Attention : MonoBehaviour {
 
             if (numGazers <= minGazers)
             {
-
                 //ensure that minimum number of gazers are up.
                 type = 0;
                 numGazers++;
@@ -172,7 +175,20 @@ public class GM_Attention : MonoBehaviour {
         for (int i = 0; i < totalTargets; i++) //this bit of code generates a spehere and checks that it doesnt collide with the last sphere created.
         {
 
-            spheresCntnr[i].transform.position = new Vector3(Random.Range(left, right), Random.Range(bottom, top));
+            Vector3 location;
+
+            location = new Vector3(0, 0);
+            switch (round_count)
+            {
+                case 1:
+                    location = new Vector3(0, 0);
+                    break;
+                default:
+                    location = new Vector3(Random.Range(left, right), Random.Range(bottom, top));
+                    break;
+            }
+
+            spheresCntnr[i].transform.position = location;
 
             spheresCntnr[i].GetComponent<HandleCollisionLL>().current = true;
             spheresCntnr[i].GetComponent<HandleCollisionLL>().index = i + 1; 
@@ -206,6 +222,17 @@ public class GM_Attention : MonoBehaviour {
                 //i--;
             }
         }
+    }
+
+
+    void DestroySpheres()
+    {
+        for (int i = 0; i < totalTargets; i++)
+        {
+            spheresCntnr[i].gameObject.SetActive(false);
+            numTargets--;
+        }
+        //destroy or deactivate all the spherres w/e im currently doing.
     }
 
     // Update is called once per frame
@@ -303,7 +330,7 @@ public class GM_Attention : MonoBehaviour {
     void EndGame() //Ends the game
     {
         Debug.Log("EndGame(): entered EndGame()");
-
+        DestroySpheres();
         StopAllCoroutines();
         gameRunning = false;
         leftText.text = "GAME";

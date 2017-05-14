@@ -20,14 +20,14 @@ Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\To
 Loading C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\Tobii.EyeX.Client.Net20.dll into Unity Child Domain
 Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\Tobii.EyeX.Client.Net20.dll (this message is harmless)
 Loading C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\Tobii.EyeX.Client.Net20.dll into Unity Child Domain
-- Completed reload, in  0.084 seconds
+- Completed reload, in  0.226 seconds
 Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\build_Data\Managed\System.dll (this message is harmless)
 desktop: 2160x1440 60Hz; virtual: 2160x1440 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 3.677282 ms
+UnloadTime: 3.500336 ms
 Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/Tobii.EyeX.Client.dll
 Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/.\Tobii.EyeX.Client.dll
 Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/build_Data/Mono/Tobii.EyeX.Client.dll
@@ -66,25 +66,22 @@ points = 1
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-moues = (747.0, 276.0, 0.0)
+moues = (929.0, 670.0, 0.0)
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-points = 1
+NullReferenceException: Object reference not set to an instance of an object
+  at GameManagerLL.Update () [0x00000] in <filename unknown>:0 
  
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-moues = (747.0, 276.0, 0.0)
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+(Filename:  Line: -1)
 
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 5d8 -> priority: 1 
+  Thread -> id: 1308 -> priority: 1 
 points = 1
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-moues = (681.0, 309.0, 0.0)
+moues = (274.0, 803.0, 0.0)
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
@@ -92,11 +89,36 @@ points = 1
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 
-moues = (681.0, 309.0, 0.0)
+moues = (321.0, 809.0, 0.0)
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+points = 1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+moues = (390.0, 810.0, 0.0)
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at GameManagerLL.Update () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
 
 seconds = 2roundtime = 20
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+seconds = 3roundtime = 20
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+entered Target on
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+seconds = 4roundtime = 20
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
 

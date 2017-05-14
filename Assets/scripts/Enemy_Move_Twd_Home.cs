@@ -9,7 +9,8 @@ public class Enemy_Move_Twd_Home : MonoBehaviour {
 
     public float frequency = 0.0f;  // Speed of sine movement
     public float magnitude = 0.0f;   // Size of sine movement
-    public GameObject home;
+    //public GameObject home;
+    GameObject home;
     private Vector3 axis;
 
     Transform target;
@@ -18,13 +19,13 @@ public class Enemy_Move_Twd_Home : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        home = GameObject.Find("Home");
 
         MoveSpeed = 1.0f;
-        frequency = 10.0f;
-        magnitude = 1.0f;   // Size of sine movement
 
-        MoveSpeed = MoveSpeed / gameObject.transform.localScale.x * Random.Range(1.0f, 1.8f);
-        frequency = MoveSpeed * 2.0f;
+        //scale ranges from .2 - .6
+   
+        MoveSpeed = gameObject.transform.localScale.x * Random.Range(3.0f, 4.0f);
         target = home.transform;
         //magnitude += MoveSpeed / Random.Range(1.5f, 2.8f);
 
@@ -35,15 +36,8 @@ public class Enemy_Move_Twd_Home : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        Vector3 xPos = pos + axis * Mathf.Sin(Time.time * frequency) * magnitude;
-        Vector3 finalPos = new Vector3(xPos.x, transform.position.y, transform.position.z);
-
+        target = home.transform;
         float step = MoveSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, target.position, step);
-
-        if (Input.GetKey(KeyCode.UpArrow)) //debug to raise movement magnitude 
-        {
-            magnitude += 0.5f;
-        }
     }
 }

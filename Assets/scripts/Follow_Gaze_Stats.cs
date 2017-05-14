@@ -41,26 +41,32 @@ public class Follow_Gaze_Stats : MonoBehaviour {
         else
         {
 
-            gazePoint = EyeTracking.GetGazePoint();
-            projectThis = new Vector3(gazePoint.Screen.x, gazePoint.Screen.y, -Camera.main.transform.position.z);
-            transform.position = Camera.main.ScreenToWorldPoint(projectThis);
+            GazeTracking gazeTracking = EyeTracking.GetGazeTrackingStatus();
+            UserPresence userPresence = EyeTracking.GetUserPresence();
 
-
-
-            //countdown color change back to original
-            if (lifetime >= 0)
+            if (userPresence.IsUserPresent)
             {
-                lifetime -= Time.deltaTime;
-            }
-            else
-            {
-                if (gaze_color != gazeColor.none)
+                gazePoint = EyeTracking.GetGazePoint();
+                projectThis = new Vector3(gazePoint.Screen.x, gazePoint.Screen.y, -Camera.main.transform.position.z);
+                transform.position = Camera.main.ScreenToWorldPoint(projectThis);
+
+
+
+                //countdown color change back to original
+                if (lifetime >= 0)
                 {
-                    SwitchColorWhite();
+                    lifetime -= Time.deltaTime;
                 }
-                //rend.color = Color.white;
-                //gaze_color = gazeColor.none;
-                // change that sonbitch to grey. 
+                else
+                {
+                    if (gaze_color != gazeColor.none)
+                    {
+                        SwitchColorWhite();
+                    }
+                    //rend.color = Color.white;
+                    //gaze_color = gazeColor.none;
+                    // change that sonbitch to grey. 
+                }
             }
         }
     }

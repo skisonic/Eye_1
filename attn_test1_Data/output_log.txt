@@ -1,0 +1,96 @@
+Mono path[0] = 'C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Managed'
+Mono path[1] = 'C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono'
+Mono config path = 'C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/etc'
+PlayerConnection initialized from C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data (debug = 0)
+PlayerConnection initialized network socket : 0.0.0.0 55370
+Multi-casting "[IP] 172.16.38.6 [Port] 55370 [Flags] 3 [Guid] 4159321411 [EditorId] 858863250 [Version] 1048832 [Id] WindowsPlayer(surfacepro) [Debug] 1" to [225.0.0.222:54997]...
+Waiting for connection from host on [0.0.0.0:55370]...
+PlayerConnection accepted from [172.16.38.6] handle:0x20c
+Started listening to [0.0.0.0:55370]
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,defer=y,address=0.0.0.0:56411
+PlayerConnection already initialized - listening to [0.0.0.0:55370]
+Initialize engine version: 5.5.1f1 (88d00a7498cd)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: Intel(R) HD Graphics Family (ID=0xa16)
+    Vendor:   Intel
+    VRAM:     1792 MB
+    Driver:   10.18.14.4170
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\Tobii.EyeX.Client.Net20.dll (this message is harmless)
+Loading C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\Tobii.EyeX.Client.Net20.dll into Unity Child Domain
+- Completed reload, in  0.085 seconds
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\surface\Documents\GitHub\Eye_1\attn_test1_Data\Managed\System.dll (this message is harmless)
+desktop: 2160x1440 60Hz; virtual: 2160x1440 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 16.774189 ms
+NewRound(): round count 2
+UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
+UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
+UnityEngine.Logger:Log(LogType, Object)
+UnityEngine.Debug:Log(Object)
+GM_Attention:NewRound() (at C:\Users\surface\Documents\GitHub\Eye_1\Assets\scripts\GM_Attention.cs:322)
+GM_Attention:Start() (at C:\Users\surface\Documents\GitHub\Eye_1\Assets\scripts\GM_Attention.cs:72)
+ 
+(Filename: C:/Users/surface/Documents/GitHub/Eye_1/Assets/scripts/GM_Attention.cs Line: 322)
+
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/Tobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/.\Tobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/Tobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/Tobii.EyeX.Client
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/.\Tobii.EyeX.Client
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/Tobii.EyeX.Client
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/libTobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/.\libTobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/libTobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/Tobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/.\Tobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/Tobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/Tobii.EyeX.Client
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/.\Tobii.EyeX.Client
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/Tobii.EyeX.Client
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/libTobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/.\libTobii.EyeX.Client.dll
+Fallback handler could not load library C:/Users/surface/Documents/GitHub/Eye_1/attn_test1_Data/Mono/libTobii.EyeX.Client.dll
+Tobii EyeTracking initialization failed because the client access library 'Tobii.EyeX.Client.dll' could not be loaded. Please make sure that it is present in the root directory of the game/application.
+UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
+UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
+UnityEngine.Logger:Log(LogType, Object)
+UnityEngine.Debug:LogError(Object)
+Tobii.EyeTracking.EyeTrackingHost:Initialize() (at C:\Users\surface\Documents\GitHub\Eye_1\Assets\Tobii\EyeTrackingFramework\Host\EyeTrackingHost.cs:416)
+Tobii.EyeTracking.EyeTrackingHost:Start() (at C:\Users\surface\Documents\GitHub\Eye_1\Assets\Tobii\EyeTrackingFramework\Host\EyeTrackingHost.cs:232)
+ 
+(Filename: C:/Users/surface/Documents/GitHub/Eye_1/Assets/Tobii/EyeTrackingFramework/Host/EyeTrackingHost.cs Line: 416)
+
+Tobii EyeTracking initialization failed because the client access library 'Tobii.EyeX.Client.dll' could not be loaded. Please make sure that it is present in the root directory of the game/application.
+UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
+UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
+UnityEngine.Logger:Log(LogType, Object)
+UnityEngine.Debug:LogError(Object)
+Tobii.EyeTracking.EyeTrackingHost:Initialize() (at C:\Users\surface\Documents\GitHub\Eye_1\Assets\Tobii\EyeTrackingFramework\Host\EyeTrackingHost.cs:416)
+Tobii.EyeTracking.EyeTracking:get_Host() (at C:\Users\surface\Documents\GitHub\Eye_1\Assets\Tobii\EyeTrackingFramework\EyeTracking.cs:133)
+Tobii.EyeTracking.EyeTracking:InitGazePointDataProvider() (at C:\Users\surface\Documents\GitHub\Eye_1\Assets\Tobii\EyeTrackingFramework\EyeTracking.cs:142)
+Tobii.EyeTracking.EyeTracking:GetGazePoint() (at C:\Users\surface\Documents\GitHub\Eye_1\Assets\Tobii\EyeTrackingFramework\EyeTracking.cs:68)
+GazePlotter:Update() (at C:\Users\surface\Documents\GitHub\Eye_1\Assets\Tobii\DemoScenes\Scripts\GazePlotter.cs:69)
+ 
+(Filename: C:/Users/surface/Documents/GitHub/Eye_1/Assets/Tobii/EyeTrackingFramework/Host/EyeTrackingHost.cs Line: 416)
+
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 26ac -> priority: 1 
+Waiting for finish
