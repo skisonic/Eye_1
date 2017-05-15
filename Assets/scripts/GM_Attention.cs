@@ -25,20 +25,22 @@ public class GM_Attention : MonoBehaviour {
     public Material[] materials;
 
     protected GameObject sphere_pf, target_pf;
-    private GameObject[] spheresCntnr = new GameObject[maxTargets]; //target container
+    private GameObject[] spheresCntnr = new GameObject[MAX_TARGETS]; //target container
 
     float points, score;
     int numTargets, numGazers, numClickers; //number of active targets, and of each type.
     int killedGazers, killedMousers; //counters for number of killed targets for a round
-    int totalTargets; //total number of targets per round
+    int totalTargets; //total number of targets during round
 
     int round_count; // counter for number of rounds completed (current round)
+    int start_round = 5; //starting round -1
+
     bool gameRunning = false; 
 
-    const int maxTargets = 7; //limit on max targets for a round (not implented yet)
+    const int MAX_TARGETS = 7; //limit on max targets for a round (not implented yet)
     const int MAX_GAZERS = 4;
     [Tooltip("Total game time")]
-    public int GAME_TIME = 45;  
+    public int GAME_TIME = 45;
     const int ROUND_TIME = 60; //amount of time per round (not implemented yet)
 
     Text leftText, rightText, timerText, scoreText, pointText;
@@ -56,7 +58,7 @@ public class GM_Attention : MonoBehaviour {
 
         score = 0;
         points = 0;
-        round_count = 1;
+        round_count = start_round; //gets incremented at first NewRound call
         numTargets = numGazers = numClickers = 0;
 
         target_pf = Resources.Load<GameObject>("prefabs/Attn_Target");
@@ -78,28 +80,173 @@ public class GM_Attention : MonoBehaviour {
  
     }
 
+    void NewRound() //starts new round including first round
+    {
+        round_count++;
+        roundCompleteTime = 0;
+        roundStartTime = 0;
+        leftText.text = "GAZE";
+
+        Debug.Log("NewRound(): round count " + round_count);
+        getBoundaries();
+        //CreateSpheres();
+        //PlaceSpheres();
+        newCreateSpheres();
+        newPlaceSpheres();
+        gameRunning = true;
+    }
+
+
+    void newCreateSpheres()
+    {
+        int rand, type;
+        int minGazers;
+        Vector3 location;
+
+        numTargets = 0; //incremental counter for number Of targets
+        numGazers = 0; //incremental counter for number Of gazer targets
+        numClickers = 0; //incremental counter for number Of mouser targets
+
+        location = new Vector3(0, 0);
+
+        if (round_count <= MAX_TARGETS) //limit num targetse to same as round or less than max lame
+        {
+            switch (round_count)
+            {
+                case 1:
+                    totalTargets = 2;
+                    break;
+                case 2:
+                    totalTargets = 2;
+                    break;
+                case 3:
+                    totalTargets = 2;
+                    break;
+                case 4:
+                    totalTargets = 2;
+                    break;
+                case 5:
+                    totalTargets = 3;
+                    break;
+                case 6:
+                    totalTargets = 4;
+                    break;
+                case 7:
+                    totalTargets = 5;
+                    break;
+                case 8:
+                    totalTargets = 6;
+                    break;
+                default:
+                    totalTargets = MAX_TARGETS;
+                    break;
+            }
+        }
+        else
+        {
+            totalTargets = MAX_TARGETS;
+        }
+
+        minGazers = totalTargets / 2;
+
+        for (int i = 0; i < totalTargets; i++)
+        {
+
+            spheresCntnr[i] = ((GameObject)Instantiate(target_pf, location, Quaternion.identity));
+
+            spheresCntnr[i].GetComponent<HandleCollisionLL>().current = true;
+            spheresCntnr[i].GetComponent<HandleCollisionLL>().index = i + 1;
+            spheresCntnr[i].gameObject.name = "Attn_Target_" + i.ToString();
+            numTargets++;
+
+
+            rand = Random.Range(0, 2);
+
+            if (numGazers <= minGazers)
+            {
+                //ensure that minimum number of gazers are up.
+                type = 0;
+                numGazers++;
+                minGazers--;
+            }
+            else if (rand == 0)
+            {
+                type = 0;
+                numGazers++;
+                //Debug.Log("else if 1" + "numtargets = " + numTargets + " num gazers count " + numGazers + "type = " + type);
+            }
+            else if (rand == 1)
+            {
+                type = 1;
+                numClickers++;
+                //Debug.Log("numtargets = " + numTargets + " num clickers count " + numClickers + "type = " + type);
+            }
+            else
+            {
+                type = 1;
+                numClickers++;
+                Debug.Log("numtargets = " + numTargets + " num clickers count " + numClickers + "type = " + type);
+                Debug.Log("Error Assigning Type: defaulting to 1");
+            }
+
+
+            if (numGazers >= MAX_GAZERS) //limit total gazers
+            {
+                type = 1;
+                numGazers--;
+            }
+            spheresCntnr[i].GetComponent<Targets_Container_Attn>().Init(type);
+
+
+            if (spheresCntnr[i].GetComponent<HandleCollisionLL>().sphere_coll == true)
+            {
+                //THIS NEEDS TO BE ADDRESSED 
+                Debug.Log("bonk");
+                //i--;
+            }
+            else
+            {
+                //Debug.Log("bink");
+                //spheresCntnr[i].GetComponent<Rigidbody>().isKinematic = true;
+            }
+
+            // need to move them if they overlap
+            //spheresCntnr[i] = Instantiate<GameObject>(sphere_pf);
+            spheresCntnr[i].GetComponent<HandleCollisionLL>().current = false;
+            //instantiate target
+        }
+
+    }
     void CreateSpheres()
     {
         int rand, type;
         int minGazers;
         Vector3 location;
 
+        numTargets = 0; //incremental counter for number Of targets
+        numGazers = 0; //incremental counter for number Of gazer targets
+        numClickers = 0; //incremental counter for number Of mouser targets
+
         location = new Vector3(0, 0);
 
-        if (round_count <= maxTargets) //limit num targetse to same as round or less than max lame
+        if (round_count <= MAX_TARGETS) //limit num targetse to same as round or less than max lame
         {
-            totalTargets = round_count;
+            switch (round_count)
+            {
+                case 1:
+                    totalTargets = 2;
+                    break;
+                default:
+                    totalTargets = round_count;
+                    break;
+            }
         }
         else
         {
-            totalTargets = maxTargets;
+            totalTargets = MAX_TARGETS;
         }
 
-        numTargets = 0;
-        numGazers = 0;
-        numClickers = 0;
         minGazers = totalTargets / 3;
-
 
         for (int i = 0; i < totalTargets; i++)
         {
@@ -170,6 +317,55 @@ public class GM_Attention : MonoBehaviour {
 
     }
 
+
+    void newPlaceSpheres() //place spheres non randomly
+    {
+        Vector3[] locations = new Vector3[totalTargets];
+
+        switch (round_count)
+        {
+            case 1: //totalTargets = 2
+                locations[0] = new Vector3(0, -1.5f);
+                locations[1] = new Vector3(0, 1.5f);
+                break;
+            case 2: //totalTargets = 2
+                locations[0] = new Vector3(3, 0);
+                locations[1] = new Vector3(-3, 0);
+                break;
+            case 3: //totalTargets = 2
+                locations[0] = new Vector3(0, 3.5f);
+                locations[1] = new Vector3(0, -3.5f);
+                break;
+            case 4: //totalTargets = 2
+                locations[0] = new Vector3(7.5f, 0);
+                locations[1] = new Vector3(-7.5f, 0);
+                break;
+            case 5: //totalTargets = 3
+                locations[0] = new Vector3(0, 4.5f);
+                locations[1] = new Vector3(-8.0f, -3.0f);
+                locations[2] = new Vector3(8.0f, -3.0f);
+                break;
+            case 6: //totalTargets = 3
+                locations[0] = new Vector3(8.0f, 4.5f);
+                locations[1] = new Vector3(-8.0f, -3.0f);
+                locations[2] = new Vector3(8.0f, -3.0f);
+                locations[3] = new Vector3(-8.0f, 4.5f);
+                break;
+            default: //totalTargets >= 7
+                for (int i = 0; i < totalTargets; i++)
+                {
+                    locations[i] = new Vector3(Random.Range(left, right), Random.Range(bottom, top));
+                }
+                break;
+        }
+
+        for(int i = 0; i < totalTargets; i++)
+        {
+            spheresCntnr[i].transform.position = locations[i];
+        }
+
+    }
+
     void PlaceSpheres() //this function moves the spheres (for some reason) but it used to ensure no overlaps
     {
         for (int i = 0; i < totalTargets; i++) //this bit of code generates a spehere and checks that it doesnt collide with the last sphere created.
@@ -178,15 +374,14 @@ public class GM_Attention : MonoBehaviour {
             Vector3 location;
 
             location = new Vector3(0, 0);
+
             switch (round_count)
             {
-                case 1:
-                    location = new Vector3(0, 0);
-                    break;
                 default:
                     location = new Vector3(Random.Range(left, right), Random.Range(bottom, top));
                     break;
             }
+
 
             spheresCntnr[i].transform.position = location;
 
@@ -207,11 +402,10 @@ public class GM_Attention : MonoBehaviour {
             spheresCntnr[i].GetComponent<HandleCollisionLL>().current = false;
         }
 
-        for (int i = 0; i < totalTargets; i++)
+        for (int i = 0; i < totalTargets; i++) //find new placement to avoid collisions
         {
             if (spheresCntnr[i].GetComponent<HandleCollisionLL>().sphere_coll == true)
             {
-                //find new placement
                 Debug.Log("bonk");
                 spheresCntnr[i].transform.position = new Vector3(Random.Range(left,right), Random.Range(bottom, top));
                 spheresCntnr[i].GetComponent<HandleCollisionLL>().sphere_coll = false;
@@ -310,20 +504,6 @@ public class GM_Attention : MonoBehaviour {
         //clear that text
         yield return new WaitForSeconds(1.5f);
         NewRound();
-    }
-
-    void NewRound() //starts new round including first round
-    {
-        round_count++;
-        roundCompleteTime = 0;
-        roundStartTime = 0;
-        leftText.text = "GAZE";
-
-        Debug.Log("NewRound(): round count " + round_count);
-        getBoundaries();
-        CreateSpheres();
-        PlaceSpheres();
-        gameRunning = true;
     }
 
 
