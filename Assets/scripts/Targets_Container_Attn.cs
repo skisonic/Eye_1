@@ -110,15 +110,7 @@ public class Targets_Container_Attn : MonoBehaviour {
                 var emission = ps.emission;
                 emission.rateOverTime = emission.rateOverTime.constant + 18.0f/(1.0f/gazeKillTimer);
                 rend.color += new Color(0.11f, 0.11f, 0.11f);
-                Debug.Log("emissionrate = " + emission.rateOverTime.constant);
-                /*
-                if (mouseKillTimer <= 0)
-                {
-                    var emission = ps.emission;
-                    emission.rateOverTime = emission.rateOverTime.constant * 2.0f;
-                    clickKillCount--;
-                    mouseKillTimer = KILL_MOUSEOVER_TIME;
-                }*/
+                //Debug.Log("emissionrate = " + emission.rateOverTime.constant);
             }
             else
             {
