@@ -14,11 +14,12 @@ public class Targets_Container_Attn : MonoBehaviour {
     int clickKillCount; //number of clicks to kill a clicker
     HandleGazeLL gazeHandler;
 
+    const int KILL_CLICK_COUNT = 3; //number of mouesd clicks required to kill a mouser
     const float KILL_GAZE_TIME = 0.75f; // we're using 3/4s rn
     const float KILL_MOUSEOVER_TIME = 1.0f; //number of seconds * KILL_CLICK_COUNT = death (hacky. fix.)
-    const int KILL_CLICK_COUNT = 3; //number of mouesd clicks required to kill a mouser
     const float GAZE_TOLERANCE = 0.2f;  //time allowed for gaze to fall off a gazer without reset
     const float DEFAULT_PART_EMIT_RATE = 10.0f;  //default
+    const float DEFAULT_PART_SPEED_MULT = 1.0f;  //default
     float particle_speed_step = 0.05f;
 
     int value;
@@ -133,7 +134,7 @@ public class Targets_Container_Attn : MonoBehaviour {
                         ps.Stop();
                         ps.Clear();
                         var main = ps.main;
-                        main.startSpeedMultiplier = 1.0f;
+                        main.startSpeedMultiplier = DEFAULT_PART_SPEED_MULT;
                         var emission = ps.emission;
                         emission.rateOverTime = DEFAULT_PART_EMIT_RATE;
                         gazeKillTimer = KILL_GAZE_TIME;
@@ -153,14 +154,13 @@ public class Targets_Container_Attn : MonoBehaviour {
         {
             if (mouseInputMode == 0) //not modified for overlaps
             {
-                // require 5 clicks to kill
+                // require KILL_CLICK_COUNT clicks to kill
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit hit;
 
-                    // Casts the ray and get the first game object hit
-                    //Physics.Raycast(ray, out hit);
+                    //Casts the ray and get the first game object hit
                     //Debug.Log("This hit " + hit.collider.gameObject.name + " at " + hit.point);
 
                     if (Physics.Raycast(ray, out hit))
@@ -198,21 +198,15 @@ public class Targets_Container_Attn : MonoBehaviour {
                 //set by external raycastall
                 if (hitMe)
                 {
-                    ps.Play();
                     mouseKillTimer -= Time.deltaTime;
+
+                    ps.Play();
                     var main = ps.main;
                     main.startSpeedMultiplier += particle_speed_step;
-                    Debug.Log("main.startSpeedMultiplier = " + main.startSpeedMultiplier);
-
-                    if (mouseKillTimer <= 0)
-                    {
-                        var emission = ps.emission;
-                        emission.rateOverTime = emission.rateOverTime.constant * 2.0f;
-                    
-                        clickKillCount--;
-                        mouseKillTimer = KILL_MOUSEOVER_TIME;
-                        rend.color += new Color(0.15f, 0.15f, 0.15f);
-                    }
+                    var emission = ps.emission;
+                    emission.rateOverTime = emission.rateOverTime.constant * 1.5f;
+                    //Debug.Log("main.startSpeedMultiplier = " + main.startSpeedMultiplier);
+                    rend.color += new Color(0.11f, 0.11f, 0.11f);
                 }
                 else
                 {
@@ -221,18 +215,17 @@ public class Targets_Container_Attn : MonoBehaviour {
                         //reset to full life. this is a lil hacky, should probably clean it up
                         ps.Stop();
                         ps.Clear();
+                        var main = ps.main;
+                        main.startSpeedMultiplier = DEFAULT_PART_SPEED_MULT;
                         var emission = ps.emission;
                         emission.rateOverTime = DEFAULT_PART_EMIT_RATE;
-                        var main = ps.main;
-                        main.startSpeedMultiplier = DEFAULT_PART_EMIT_RATE;
                         mouseKillTimer = KILL_MOUSEOVER_TIME;
-                        clickKillCount = KILL_CLICK_COUNT;
                         rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                     }
                 }
             }
 
-            if (clickKillCount <= 0)
+            if (clickKillCount <= 0 || mouseKillTimer <= 0)
             {
                 gm.UpdateOnTargetDeath(value);
                 gameObject.SetActive(false);

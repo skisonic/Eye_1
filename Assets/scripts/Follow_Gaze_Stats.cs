@@ -12,8 +12,6 @@ public class Follow_Gaze_Stats : MonoBehaviour {
 
     public enum gazeColor { red, green, blue, yellow, none };
     public gazeColor gaze_color;
-    GazePoint gazePoint;
-    DeviceStatus deviceStatus;
     Color redCannonCol, greenCannonCol, yellowCannonCol, blueCannonCol;
 
     //public SpriteRenderer[] targetSprites; 
@@ -21,7 +19,6 @@ public class Follow_Gaze_Stats : MonoBehaviour {
     // Use this for initialization
     void Start () {
         gaze_color = gazeColor.none;
-        gazePoint = EyeTracking.GetGazePoint();
         rend = GetComponent<SpriteRenderer>();
         rends = GetComponentsInChildren<SpriteRenderer>();
 
@@ -33,6 +30,9 @@ public class Follow_Gaze_Stats : MonoBehaviour {
 
     void Update () {
         Vector3 projectThis;
+        DeviceStatus deviceStatus;
+
+        deviceStatus = EyeTrackingHost.GetInstance().EyeTrackingDeviceStatus;
 
         if (deviceStatus != DeviceStatus.Tracking)
         {
@@ -40,12 +40,12 @@ public class Follow_Gaze_Stats : MonoBehaviour {
         }
         else
         {
-
-            GazeTracking gazeTracking = EyeTracking.GetGazeTrackingStatus();
             UserPresence userPresence = EyeTracking.GetUserPresence();
 
             if (userPresence.IsUserPresent)
             {
+                GazePoint gazePoint;
+                GazeTracking gazeTracking = EyeTracking.GetGazeTrackingStatus();
                 gazePoint = EyeTracking.GetGazePoint();
                 projectThis = new Vector3(gazePoint.Screen.x, gazePoint.Screen.y, -Camera.main.transform.position.z);
                 transform.position = Camera.main.ScreenToWorldPoint(projectThis);

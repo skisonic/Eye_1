@@ -15,13 +15,10 @@ public class GazeRaycastAll : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
         RaycastHit[] hits;
         DeviceStatus deviceStatus;
-        GazePoint gazePoint;
 
         deviceStatus = EyeTrackingHost.GetInstance().EyeTrackingDeviceStatus;
-        gazePoint = EyeTracking.GetGazePoint();
 
         if (deviceStatus != DeviceStatus.Tracking)
         {
@@ -29,16 +26,22 @@ public class GazeRaycastAll : MonoBehaviour {
         }
         else
         {
-            Vector3 gazePos = new Vector3(gazePoint.Screen.x, gazePoint.Screen.y, -Camera.main.transform.position.z);
-            hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(gazePos), 30.0F);
-            for (int i = 0; i < hits.Length; i++)
+            UserPresence userPresence = EyeTracking.GetUserPresence();
+            if (userPresence.IsUserPresent)
             {
-                RaycastHit hit = hits[i];
-                Renderer rend = hit.transform.GetComponent<Renderer>();
-
-                if (hit.collider.gameObject.tag == "Gazer")
+                GazePoint gazePoint;
+                gazePoint = EyeTracking.GetGazePoint();
+                Vector3 gazePos = new Vector3(gazePoint.Screen.x, gazePoint.Screen.y, -Camera.main.transform.position.z);
+                hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(gazePos), 30.0F);
+                for (int i = 0; i < hits.Length; i++)
                 {
-                    hit.collider.gameObject.GetComponent<Targets_Container_Attn>().hitMe = true;
+                    RaycastHit hit = hits[i];
+                    Renderer rend = hit.transform.GetComponent<Renderer>();
+
+                    if (hit.collider.gameObject.tag == "Gazer")
+                    {
+                        hit.collider.gameObject.GetComponent<Targets_Container_Attn>().hitMe = true;
+                    }
                 }
             }
         }
