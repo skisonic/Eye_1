@@ -23,51 +23,34 @@ public class Targets_Container_Attn : MonoBehaviour {
     float particle_speed_step = 0.001f;
 
     int value;
-    public bool counted = false;
     SpriteRenderer rend;
 
-    int mouseInputMode = 1; //0:click, 1:mouseover
-    float mouseKillTimer = KILL_MOUSEOVER_TIME; // number of seconds * KILL_CLICK_COUNT = death (hacky. fix.)
+    int mouseInputMode; //0:click, 1:mouseover
     int continuousGazeMode; //if 1 gaze moves off gazer, restart timer (requires continues gaze)
     int continuousMouseMode; //if 1 mouse moves off moueser, restart timer (requires continues mouseover)
+    float mouseKillTimer; // time in seconds required for mouseover to kill mouser
 
     private GM_Attention gm;
     private ParticleSystem ps;
+    public bool counted = false;
     public bool hitMe;
     // Use this for initialization
     void Start () {
 
         gm = GameObject.Find("GameManager").GetComponent<GM_Attention>();
         ps = gameObject.GetComponentInChildren<ParticleSystem>();
+
         continuousGazeMode = 1; 
         continuousMouseMode = 1;
+
+        mouseInputMode = 1;
+        mouseKillTimer = KILL_MOUSEOVER_TIME;
         hitMe = false;
-
     }
 
-
-    public int ReturnPoints()
-    {
-        if(type == 0)
-        {
-            return 3;
-        }
-        else if (type == 1)
-        {
-            return 1;
-        }
-        else
-        {
-            Debug.Log("Error returning points/type");
-            return 0;
-        }
-    }
-	
     public void Init(int type_in)
     {
-        GazeAware gaze_aware;
         rend = GetComponentInChildren<SpriteRenderer>();
-        gaze_aware = GetComponent<GazeAware>();
         gazeHandler = GetComponent<HandleGazeLL>();
         //Debug.Log("initiating. type =  " + type);
 
@@ -243,5 +226,23 @@ public class Targets_Container_Attn : MonoBehaviour {
     void LateUpdate()
     {
         hitMe = false; //glory. halleujah
+    }
+
+
+    public int ReturnPoints()
+    {
+        if (type == 0)
+        {
+            return 3;
+        }
+        else if (type == 1)
+        {
+            return 1;
+        }
+        else
+        {
+            Debug.Log("Error returning points/type");
+            return 0;
+        }
     }
 }
