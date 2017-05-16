@@ -29,18 +29,19 @@ public class HandleCollisionLL : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (index > other.gameObject.GetComponent<HandleCollisionLL>().index)
+        if (target_tags.Contains(other.gameObject.tag))
         {
-            //if (other.gameObject.tag == ("Sphere_pf")
-            if (target_tags.Contains(other.gameObject.tag))
+            if (index > other.gameObject.GetComponent<HandleCollisionLL>().index)
             {
-                sphere_coll = true;
-                FindNewPosition();
+                {
+                    sphere_coll = true;
+                    FindNewPosition();
+                }
             }
-        }
-        else
-        {
-            //Debug.Log("wtf");
+            else
+            {
+                //Debug.Log("wtf");
+            }
         }
     }
 
