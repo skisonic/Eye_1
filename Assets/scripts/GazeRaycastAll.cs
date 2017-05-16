@@ -32,7 +32,7 @@ public class GazeRaycastAll : MonoBehaviour {
                 GazePoint gazePoint;
                 gazePoint = EyeTracking.GetGazePoint();
                 Vector3 gazePos = new Vector3(gazePoint.Screen.x, gazePoint.Screen.y, -Camera.main.transform.position.z);
-                hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(gazePos), 30.0F);
+                hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(gazePos), 30.0f);
                 for (int i = 0; i < hits.Length; i++)
                 {
                     RaycastHit hit = hits[i];

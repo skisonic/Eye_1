@@ -20,7 +20,7 @@ public class Targets_Container_Attn : MonoBehaviour {
     const float GAZE_TOLERANCE = 0.2f;  //time allowed for gaze to fall off a gazer without reset
     const float DEFAULT_PART_EMIT_RATE = 10.0f;  //default
     const float DEFAULT_PART_SPEED_MULT = 1.0f;  //default
-    float particle_speed_step = 0.05f;
+    float particle_speed_step = 0.001f;
 
     int value;
     public bool counted = false;
@@ -112,8 +112,9 @@ public class Targets_Container_Attn : MonoBehaviour {
                 var main = ps.main;
                 main.startSpeedMultiplier += particle_speed_step;
                 var emission = ps.emission;
-                emission.rateOverTime = emission.rateOverTime.constant + 18.0f/(1.0f/gazeKillTimer);
-                rend.color += new Color(0.11f, 0.11f, 0.11f);
+                //emission.rateOverTime = emission.rateOverTime.constant + 18.0f/(1.0f/gazeKillTimer);
+                emission.rateOverTime = emission.rateOverTime.constant * 1.2f;
+                rend.color += new Color(0.011f, 0.011f, 0.011f);
                 //Debug.Log("emissionrate = " + emission.rateOverTime.constant);
             }
             else
@@ -126,7 +127,7 @@ public class Targets_Container_Attn : MonoBehaviour {
                     {
                         //Debug.Log("gaze tol timer = " + gazeTolTimer);
                         gazeKillTimer -= Time.deltaTime;
-                        rend.color += new Color(0.11f, 0.11f, 0.11f);
+                        rend.color += new Color(0.011f, 0.011f, 0.011f);
                         //rend.color += new Color(0.0085f, 0.0085f, 0.0085f);
                     }
                     else //reset gazer to full.
@@ -204,9 +205,10 @@ public class Targets_Container_Attn : MonoBehaviour {
                     var main = ps.main;
                     main.startSpeedMultiplier += particle_speed_step;
                     var emission = ps.emission;
-                    emission.rateOverTime = emission.rateOverTime.constant * 1.5f;
-                    //Debug.Log("main.startSpeedMultiplier = " + main.startSpeedMultiplier);
-                    rend.color += new Color(0.11f, 0.11f, 0.11f);
+                    emission.rateOverTime = emission.rateOverTime.constant * 1.2f;
+                    //emission.rateOverTime = emission.rateOverTime.constant + (200.0f * Time.deltaTime);
+                    //Debug.Log("emission.rateOverTime = " + emission.rateOverTime.constant);
+                    rend.color += new Color(0.009f, 0.009f, 0.009f);
                 }
                 else
                 {
