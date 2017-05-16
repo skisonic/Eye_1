@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public class HandleCollisionLL : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public class HandleCollisionLL : MonoBehaviour
     public bool sphere_coll, current;
     public int index;
     float left, right, top, bottom;
-
+    string[] target_tags = { "Mouser", "Gazer", "Sphere_pf" };
 
     // Use this for initialization
     void Start () {
@@ -30,7 +31,8 @@ public class HandleCollisionLL : MonoBehaviour
     {
         if (index > other.gameObject.GetComponent<HandleCollisionLL>().index)
         {
-            if (other.gameObject.tag == "Sphere_pf")
+            //if (other.gameObject.tag == ("Sphere_pf")
+            if (target_tags.Contains(other.gameObject.tag))
             {
                 sphere_coll = true;
                 FindNewPosition();

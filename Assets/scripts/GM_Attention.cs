@@ -33,7 +33,7 @@ public class GM_Attention : MonoBehaviour {
     int totalTargets; //total number of targets during round
 
     int round_count; // counter for number of rounds completed (current round)
-    int start_round = 5; //starting round -1
+    int start_round = 8; //starting round -1
 
     bool gameRunning = false; 
 

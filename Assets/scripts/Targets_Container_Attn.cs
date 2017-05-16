@@ -15,6 +15,7 @@ public class Targets_Container_Attn : MonoBehaviour {
     HandleGazeLL gazeHandler;
 
     const float KILL_GAZE_TIME = 45.0f; //multiply this shit by 60 for now. we're using 3/4s rn
+    const float KILL_MOUSEOVER_TIME = 1.0f; //number of seconds * KILL_CLICK_COUNT = death (hacky. fix.)
     const int KILL_CLICK_COUNT = 3; //number of mouesd clicks required to kill a mouser
     const float GAZE_TOLERANCE = 0.2f;  //time allowed for gaze to fall off a gazer without reset
 
@@ -24,17 +25,22 @@ public class Targets_Container_Attn : MonoBehaviour {
     SpriteRenderer rend;
 
     int mouseInputMode = 1; //0:click, 1:mouseover
-    float mouseKillTimer = 10.0f;
+    float mouseKillTimer = KILL_MOUSEOVER_TIME; // number of seconds * KILL_CLICK_COUNT = death (hacky. fix.)
     int continuousGazeMode; //if 1 gaze moves off gazer, restart timer (requires continues gaze)
     int continuousMouseMode; //if 1 mouse moves off moueser, restart timer (requires continues mouseover)
 
     private GM_Attention gm;
+    private ParticleSystem ps;
+    public bool hitMe;
     // Use this for initialization
     void Start () {
 
         gm = GameObject.Find("GameManager").GetComponent<GM_Attention>();
+        ps = gameObject.GetComponentInChildren<ParticleSystem>();
         continuousGazeMode = 1; 
         continuousMouseMode = 1;
+        hitMe = false;
+
     }
 
 
@@ -65,6 +71,7 @@ public class Targets_Container_Attn : MonoBehaviour {
 
         if (type_in == 0)
         {
+            gameObject.tag = "Gazer";
             rend.sprite = target_sprites[0]; //0 = red = gaze
             rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
             gazeKillTimer = KILL_GAZE_TIME;
@@ -72,13 +79,15 @@ public class Targets_Container_Attn : MonoBehaviour {
         }
         else if (type_in == 1)
         {
-            rend.sprite = target_sprites[1]; //1 = orange = click
+            gameObject.tag = "Mouser";
+            rend.sprite = target_sprites[1]; //1 = yellow = click
             rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
             clickKillCount = KILL_CLICK_COUNT;
             value = 1;
         }
         else
         {
+            gameObject.tag = "Mouser";
             rend.sprite = target_sprites[1]; //1 = orange = click
             clickKillCount = KILL_CLICK_COUNT;
             value = 1;
@@ -94,7 +103,6 @@ public class Targets_Container_Attn : MonoBehaviour {
         {
             if (gazeHandler.hasGaze)
             {
-                clickKillCount--;
                 rend.color += new Color(0.15f, 0.15f, 0.15f);
 
                 gazeKillTimer--;
@@ -153,12 +161,13 @@ public class Targets_Container_Attn : MonoBehaviour {
                 }
 
             }
-            else if (mouseInputMode == 1)
+            else if (mouseInputMode == 1) // 1:mouseover moude
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
 
-                if (Input.GetKeyDown(KeyCode.Mouse0))
+                /*
+                if (Input.GetKeyDown(KeyCode.Mouse0)) //clicking (deprecated)
                 {
                     Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit);
                     if (hit.collider.gameObject == gameObject)
@@ -174,42 +183,75 @@ public class Targets_Container_Attn : MonoBehaviour {
                     }
 
                 }
+                */
 
                 // Casts the ray and get all objects hit
                 //success, to be implemented later along with gazer
                 //needs a bool and some sort of overall check or something
+
                 /*
                 RaycastHit[] hits;
-                hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition), 100.0F);
+                bool isHit = false;
+                hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition), 30.0F);
                 for (int i = 0; i < hits.Length; i++)
                 {
-                    //should get overlapping mouser
                     if (hits[i].collider.gameObject == gameObject)
                     {
-                        mouseKillTimer--;
-
-                        if (mouseKillTimer <= 0)
-                        {
-                            clickKillCount--;
-                            mouseKillTimer = 10.0f;
-                            rend.color += new Color(0.15f, 0.15f, 0.15f);
-                        }
+                        isHit = true;
+                    }
+                    else
+                    {
+                        isHit = false;
                     }
                 }
                 */
 
-                // Casts the ray and get the first game object hit
+                    //should get overlapping mouser
+                    if (hitMe)
+                    {
+                        ps.Play();
+                        mouseKillTimer -= Time.deltaTime;
 
+                        if (mouseKillTimer <= 0)
+                        {
+                            var emission = ps.emission;
+                            emission.rateOverTime = emission.rateOverTime.constant * 2.0f;
+                            clickKillCount--;
+                            mouseKillTimer = KILL_MOUSEOVER_TIME;
+                            rend.color += new Color(0.15f, 0.15f, 0.15f);
+                        }
+                    }
+                    else
+                    {
+                        if (continuousMouseMode == 1)
+                        {
+                            //reset to full life. this is all hacky, should probably clean it up
+                            //it is casting a bunch of rays... pretty inefficient but working.
+                            ps.Stop();
+                            ps.Clear();
+                            var emission = ps.emission;
+                            emission.rateOverTime = 10.0f;
+                            mouseKillTimer = KILL_MOUSEOVER_TIME;
+                            clickKillCount = KILL_CLICK_COUNT;
+                            rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                        }
+                    }
+ 
+
+                // Casts the ray and get the first game object hit
+                /*
                 if (Physics.Raycast(ray, out hit))
                 {
                     if (hit.collider.gameObject == gameObject)
                     {
-                        mouseKillTimer--;
-
+                        ps.Play();
+                        mouseKillTimer -= Time.deltaTime;
                         if (mouseKillTimer <= 0)
                         {
+                            var emission = ps.emission;
+                            emission.rateOverTime = emission.rateOverTime.constant * 2.0f;
                             clickKillCount--;
-                            mouseKillTimer = 10.0f;
+                            mouseKillTimer = KILL_MOUSEOVER_TIME;
                             rend.color += new Color(0.15f, 0.15f, 0.15f);
                         }
                     }
@@ -219,11 +261,17 @@ public class Targets_Container_Attn : MonoBehaviour {
                     if(continuousMouseMode == 1)
                     {
                         //reset to full life. this is all hacky, should probably clean it up
-                        mouseKillTimer = 10.0f;
+                        //it is casting a bunch of rays... pretty inefficient but working.
+                        ps.Stop();
+                        ps.Clear();
+                        var emission = ps.emission;
+                        emission.rateOverTime = 10.0f;
+                        mouseKillTimer = KILL_MOUSEOVER_TIME;
                         clickKillCount = KILL_CLICK_COUNT;
                         rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                     }
                 }
+                */
             }
 
             if (clickKillCount <= 0)
@@ -237,5 +285,10 @@ public class Targets_Container_Attn : MonoBehaviour {
         {
             Debug.Log("Error Type undefined");
         }
+    }
+
+    void LateUpdate()
+    {
+        hitMe = false;
     }
 }
