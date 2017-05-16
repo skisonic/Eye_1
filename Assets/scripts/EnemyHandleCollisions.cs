@@ -25,7 +25,7 @@ public class EnemyHandleCollisions : MonoBehaviour
     void OnCollisionEnter(Collision coll)
     {
         //Debug.Log("3D collision detected");
-        if (coll.gameObject.tag == "Bullet") //  take damage from by bullet.
+        if (coll.gameObject.CompareTag("Bullet")) //  take damage from by bullet.
         {
             BulletStats bs = coll.gameObject.GetComponent<BulletStats>();
 
@@ -37,7 +37,7 @@ public class EnemyHandleCollisions : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-        if (coll.gameObject.tag == "Player_Gaze") // take damage from gaze body
+        if (coll.gameObject.CompareTag("Player_Gaze")) // take damage from gaze body
         {
             Debug.Log("Player Gaze");
 
@@ -53,7 +53,7 @@ public class EnemyHandleCollisions : MonoBehaviour
                 */
             }
         }
-        if (coll.gameObject.tag == "Floor") // hits the ground.
+        if (coll.gameObject.CompareTag("Floor")) // hits the ground.
         {
             GetComponent<EnemyMovement_Follow>().enabled = false;
             Destroy(gameObject, 0.5f);

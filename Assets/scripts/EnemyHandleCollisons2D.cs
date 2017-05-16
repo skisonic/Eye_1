@@ -23,7 +23,7 @@ public class EnemyHandleCollisons2D : MonoBehaviour {
     {
         Debug.Log("2D Collision recorded");
         //HERES WHERE THE ENEMY DIES   
-        if (coll.gameObject.tag == "Bullet")
+        if (coll.gameObject.CompareTag("Bullet"))
         {
             BulletStats bs = coll.gameObject.GetComponent<BulletStats>();
 
@@ -35,7 +35,7 @@ public class EnemyHandleCollisons2D : MonoBehaviour {
                 Destroy(gameObject);
             }
         }
-        if (coll.gameObject.tag == "Player_Gaze")
+        if (coll.gameObject.CompareTag("Player_Gaze"))
         {
             //Follow_Gaze_Stats fs = coll.gameObject.GetComponent<Follow_Gaze_Stats>();
             Follow_Gaze_Stats fs = coll.gameObject.GetComponentInParent<Follow_Gaze_Stats>();

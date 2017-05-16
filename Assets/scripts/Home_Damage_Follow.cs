@@ -65,7 +65,7 @@ public class Home_Damage_Follow : MonoBehaviour
 
     void OnCollisionEnter(Collision coll)
     {
-        if (coll.gameObject.tag == "Enemy_Cube")
+        if (coll.gameObject.CompareTag("Enemy_Cube"))
         {
             ReceiveDamage(1);
             Destroy(coll.gameObject);

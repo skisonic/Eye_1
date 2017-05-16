@@ -74,7 +74,7 @@ public class Follow_Gaze_Stats : MonoBehaviour {
 
     void OnTriggerEnter(Collider coll)
     {
-        if (coll.gameObject.tag == "ColorChanger")
+        if (coll.gameObject.CompareTag("ColorChanger"))
         {
             //Debug.Log("1 triggered a color changer");
             CannonStats cs = coll.gameObject.GetComponent<CannonStats>();
@@ -84,7 +84,7 @@ public class Follow_Gaze_Stats : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D coll)
     {
-        if (coll.gameObject.tag == "ColorChanger")
+        if (coll.gameObject.CompareTag("ColorChanger"))
         {
             Debug.Log("2 triggered a color changer");
             CannonStats cs = coll.gameObject.GetComponentInParent<CannonStats>();
@@ -94,7 +94,7 @@ public class Follow_Gaze_Stats : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D coll)
     {
-        if (coll.gameObject.tag == "ColorChanger")
+        if (coll.gameObject.CompareTag("ColorChanger"))
         {
             Debug.Log("3 triggered a color changer");
             CannonStats cs = coll.gameObject.GetComponentInParent<CannonStats>();
@@ -104,7 +104,7 @@ public class Follow_Gaze_Stats : MonoBehaviour {
 
     void OnCollisionEnter(Collision coll)
     {
-        if (coll.gameObject.tag == "ColorChanger")
+        if (coll.gameObject.CompareTag("ColorChanger"))
         {
             Debug.Log("4 triggered a color changer");
             CannonStats cs = coll.gameObject.GetComponentInParent<CannonStats>();
