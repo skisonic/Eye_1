@@ -15,23 +15,19 @@ public class SpriteFollowGazePlot : MonoBehaviour {
     {
         Vector3 projectThis;
         DeviceStatus deviceStatus;
-        GazePoint gazePoint;
 
         deviceStatus = EyeTrackingHost.GetInstance().EyeTrackingDeviceStatus;
-        gazePoint = EyeTracking.GetGazePoint();
-
+       
         if (deviceStatus != DeviceStatus.Tracking)
         {
             deviceStatus = EyeTrackingHost.GetInstance().EyeTrackingDeviceStatus;
         }
         else
-        {
-
-            GazeTracking gazeTracking = EyeTracking.GetGazeTrackingStatus();
+        {         
             UserPresence userPresence = EyeTracking.GetUserPresence();
-
             if (userPresence.IsUserPresent)
             {
+                GazePoint gazePoint;
                 gazePoint = EyeTracking.GetGazePoint();
                 projectThis = new Vector3(gazePoint.Screen.x, gazePoint.Screen.y, -Camera.main.transform.position.z);
                 transform.position = Camera.main.ScreenToWorldPoint(projectThis);
