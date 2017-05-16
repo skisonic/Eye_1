@@ -18,8 +18,9 @@ public class Targets_Container_Attn : MonoBehaviour {
     const float KILL_MOUSEOVER_TIME = 1.0f; //number of seconds * KILL_CLICK_COUNT = death (hacky. fix.)
     const int KILL_CLICK_COUNT = 3; //number of mouesd clicks required to kill a mouser
     const float GAZE_TOLERANCE = 0.2f;  //time allowed for gaze to fall off a gazer without reset
+    const float DEFAULT_PART_EMIT_RATE = 10.0f;  //default
+    float particle_speed_step = 0.05f;
 
-    int rand;
     int value;
     public bool counted = false;
     SpriteRenderer rend;
@@ -107,6 +108,8 @@ public class Targets_Container_Attn : MonoBehaviour {
                 gazeTolTimer = GAZE_TOLERANCE;
 
                 ps.Play();
+                var main = ps.main;
+                main.startSpeedMultiplier += particle_speed_step;
                 var emission = ps.emission;
                 emission.rateOverTime = emission.rateOverTime.constant + 18.0f/(1.0f/gazeKillTimer);
                 rend.color += new Color(0.11f, 0.11f, 0.11f);
@@ -116,8 +119,7 @@ public class Targets_Container_Attn : MonoBehaviour {
             {
                 if (continuousGazeMode == 1)
                 {
-                    //reset to full life. this is all hacky, should probably clean it up
-                    //it is casting a bunch of rays... pretty inefficient but working.
+                    //reset to full life. this is a lil hacky, should probably clean it up
                     gazeTolTimer -= Time.deltaTime;
                     if (gazeTolTimer > 0) //run down tolerance before reset
                     {
@@ -130,46 +132,15 @@ public class Targets_Container_Attn : MonoBehaviour {
                     {
                         ps.Stop();
                         ps.Clear();
+                        var main = ps.main;
+                        main.startSpeedMultiplier = 1.0f;
                         var emission = ps.emission;
-                        emission.rateOverTime = 10.0f;
+                        emission.rateOverTime = DEFAULT_PART_EMIT_RATE;
                         gazeKillTimer = KILL_GAZE_TIME;
                         rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                     }
                 }
             }
-            /*****************/
-
-            /*
-            if (gazeHandler.hasGaze)
-            {
-                rend.color += new Color(0.15f, 0.15f, 0.15f);
-
-                gazeKillTimer--;
-                gazeTolTimer = GAZE_TOLERANCE;
-                rend.color += new Color(0.1f, 0.1f, 0.1f);
-                //Debug.Log("has gaze from handler. gazeKillTime left = " + gazeKillTimer);
-            }
-            else
-            {
-                if (continuousGazeMode == 1)
-                {
-                    gazeTolTimer -= Time.deltaTime;
-                    if (gazeTolTimer > 0) //run down tolerance before reset
-                    {
-                        //Debug.Log("gaze tol timer = " + gazeTolTimer);
-                        gazeKillTimer--;
-                        rend.color += new Color(0.0085f, 0.0085f, 0.0085f);
-                    }
-                    else //reset gazer to full.
-                    {
-                        rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                        gazeKillTimer = KILL_GAZE_TIME;
-                    }
-                }
-            }
-            */
-
-            /******/
 
             if (gazeKillTimer <= 0)
             {
@@ -180,7 +151,7 @@ public class Targets_Container_Attn : MonoBehaviour {
         }
         else if (type == 1) //mouser
         {
-            if (mouseInputMode == 0)
+            if (mouseInputMode == 0) //not modified for overlaps
             {
                 // require 5 clicks to kill
                 if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -205,9 +176,6 @@ public class Targets_Container_Attn : MonoBehaviour {
             }
             else if (mouseInputMode == 1) // 1:mouseover moude
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-
                 /*
                 if (Input.GetKeyDown(KeyCode.Mouse0)) //clicking (deprecated)
                 {
@@ -227,93 +195,41 @@ public class Targets_Container_Attn : MonoBehaviour {
                 }
                 */
 
-                // Casts the ray and get all objects hit
-                //success, to be implemented later along with gazer
-                //needs a bool and some sort of overall check or something
-
-                /*
-                RaycastHit[] hits;
-                bool isHit = false;
-                hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition), 30.0F);
-                for (int i = 0; i < hits.Length; i++)
+                //set by external raycastall
+                if (hitMe)
                 {
-                    if (hits[i].collider.gameObject == gameObject)
-                    {
-                        isHit = true;
-                    }
-                    else
-                    {
-                        isHit = false;
-                    }
-                }
-                */
+                    ps.Play();
+                    mouseKillTimer -= Time.deltaTime;
+                    var main = ps.main;
+                    main.startSpeedMultiplier += particle_speed_step;
+                    Debug.Log("main.startSpeedMultiplier = " + main.startSpeedMultiplier);
 
-                    //should get overlapping mouser
-                    if (hitMe)
+                    if (mouseKillTimer <= 0)
                     {
-                        ps.Play();
-                        mouseKillTimer -= Time.deltaTime;
-
-                        if (mouseKillTimer <= 0)
-                        {
-                            var emission = ps.emission;
-                            emission.rateOverTime = emission.rateOverTime.constant * 2.0f;
-                            clickKillCount--;
-                            mouseKillTimer = KILL_MOUSEOVER_TIME;
-                            rend.color += new Color(0.15f, 0.15f, 0.15f);
-                        }
-                    }
-                    else
-                    {
-                        if (continuousMouseMode == 1)
-                        {
-                            //reset to full life. this is all hacky, should probably clean it up
-                            //it is casting a bunch of rays... pretty inefficient but working.
-                            ps.Stop();
-                            ps.Clear();
-                            var emission = ps.emission;
-                            emission.rateOverTime = 10.0f;
-                            mouseKillTimer = KILL_MOUSEOVER_TIME;
-                            clickKillCount = KILL_CLICK_COUNT;
-                            rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                        }
-                    }
- 
-
-                // Casts the ray and get the first game object hit
-                /*
-                if (Physics.Raycast(ray, out hit))
-                {
-                    if (hit.collider.gameObject == gameObject)
-                    {
-                        ps.Play();
-                        mouseKillTimer -= Time.deltaTime;
-                        if (mouseKillTimer <= 0)
-                        {
-                            var emission = ps.emission;
-                            emission.rateOverTime = emission.rateOverTime.constant * 2.0f;
-                            clickKillCount--;
-                            mouseKillTimer = KILL_MOUSEOVER_TIME;
-                            rend.color += new Color(0.15f, 0.15f, 0.15f);
-                        }
+                        var emission = ps.emission;
+                        emission.rateOverTime = emission.rateOverTime.constant * 2.0f;
+                    
+                        clickKillCount--;
+                        mouseKillTimer = KILL_MOUSEOVER_TIME;
+                        rend.color += new Color(0.15f, 0.15f, 0.15f);
                     }
                 }
                 else
                 {
-                    if(continuousMouseMode == 1)
+                    if (continuousMouseMode == 1)
                     {
-                        //reset to full life. this is all hacky, should probably clean it up
-                        //it is casting a bunch of rays... pretty inefficient but working.
+                        //reset to full life. this is a lil hacky, should probably clean it up
                         ps.Stop();
                         ps.Clear();
                         var emission = ps.emission;
-                        emission.rateOverTime = 10.0f;
+                        emission.rateOverTime = DEFAULT_PART_EMIT_RATE;
+                        var main = ps.main;
+                        main.startSpeedMultiplier = DEFAULT_PART_EMIT_RATE;
                         mouseKillTimer = KILL_MOUSEOVER_TIME;
                         clickKillCount = KILL_CLICK_COUNT;
                         rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                     }
                 }
-                */
             }
 
             if (clickKillCount <= 0)
@@ -331,6 +247,6 @@ public class Targets_Container_Attn : MonoBehaviour {
 
     void LateUpdate()
     {
-        hitMe = false;
+        hitMe = false; //glory. halleujah
     }
 }
