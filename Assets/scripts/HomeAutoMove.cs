@@ -17,7 +17,7 @@ public class HomeAutoMove : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void FixedUpdate () {
+    void FixedUpdate () { //SHOULD BE CHANGED TO UPDATE
 
         if (_gazeAware.HasGazeFocus)
         {

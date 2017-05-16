@@ -36,7 +36,7 @@ public class FireCannonOnGaze : MonoBehaviour
 
 
     
-    void Update()
+    void Update() //ALL ADDFORCES SHOULD BE MOVED TO FIXED
     {
 
         if ((Input.GetKeyDown(KeyCode.Alpha1)))

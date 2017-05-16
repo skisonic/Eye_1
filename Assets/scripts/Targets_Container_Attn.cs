@@ -14,7 +14,7 @@ public class Targets_Container_Attn : MonoBehaviour {
     int clickKillCount; //number of clicks to kill a clicker
     HandleGazeLL gazeHandler;
 
-    const float KILL_GAZE_TIME = 45.0f; //multiply this shit by 60 for now. we're using 3/4s rn
+    const float KILL_GAZE_TIME = 0.75f; // we're using 3/4s rn
     const float KILL_MOUSEOVER_TIME = 1.0f; //number of seconds * KILL_CLICK_COUNT = death (hacky. fix.)
     const int KILL_CLICK_COUNT = 3; //number of mouesd clicks required to kill a mouser
     const float GAZE_TOLERANCE = 0.2f;  //time allowed for gaze to fall off a gazer without reset
@@ -97,10 +97,57 @@ public class Targets_Container_Attn : MonoBehaviour {
     }
 
 	// Update is called once per frame
-	void FixedUpdate ()
+	void Update ()
     {
         if (type == 0) //gazer
         {
+            if (hitMe)
+            {
+                gazeKillTimer -= Time.deltaTime;
+                gazeTolTimer = GAZE_TOLERANCE;
+
+                ps.Play();
+                var emission = ps.emission;
+                emission.rateOverTime = emission.rateOverTime.constant + 18.0f/(1.0f/gazeKillTimer);
+                rend.color += new Color(0.11f, 0.11f, 0.11f);
+                Debug.Log("emissionrate = " + emission.rateOverTime.constant);
+                /*
+                if (mouseKillTimer <= 0)
+                {
+                    var emission = ps.emission;
+                    emission.rateOverTime = emission.rateOverTime.constant * 2.0f;
+                    clickKillCount--;
+                    mouseKillTimer = KILL_MOUSEOVER_TIME;
+                }*/
+            }
+            else
+            {
+                if (continuousGazeMode == 1)
+                {
+                    //reset to full life. this is all hacky, should probably clean it up
+                    //it is casting a bunch of rays... pretty inefficient but working.
+                    gazeTolTimer -= Time.deltaTime;
+                    if (gazeTolTimer > 0) //run down tolerance before reset
+                    {
+                        //Debug.Log("gaze tol timer = " + gazeTolTimer);
+                        gazeKillTimer -= Time.deltaTime;
+                        rend.color += new Color(0.11f, 0.11f, 0.11f);
+                        //rend.color += new Color(0.0085f, 0.0085f, 0.0085f);
+                    }
+                    else //reset gazer to full.
+                    {
+                        ps.Stop();
+                        ps.Clear();
+                        var emission = ps.emission;
+                        emission.rateOverTime = 10.0f;
+                        gazeKillTimer = KILL_GAZE_TIME;
+                        rend.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    }
+                }
+            }
+            /*****************/
+
+            /*
             if (gazeHandler.hasGaze)
             {
                 rend.color += new Color(0.15f, 0.15f, 0.15f);
@@ -128,6 +175,9 @@ public class Targets_Container_Attn : MonoBehaviour {
                     }
                 }
             }
+            */
+
+            /******/
 
             if (gazeKillTimer <= 0)
             {
