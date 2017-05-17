@@ -21,7 +21,7 @@ public class EnemyHandleCollisons2D : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D coll)
     {
-        Debug.Log("2D Collision recorded");
+        //Debug.Log("2D Collision recorded");
         //HERES WHERE THE ENEMY DIES   
         if (coll.gameObject.CompareTag("Bullet"))
         {

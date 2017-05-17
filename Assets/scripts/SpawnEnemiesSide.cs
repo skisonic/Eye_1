@@ -13,11 +13,13 @@ public class SpawnEnemiesSide : MonoBehaviour
     public Text dragText, scaleText;
 
     public Sprite[] enemySprites;
-
+    GameObject[] enemies; //container for active enemies 
+    int max_enemies = 3; //limit on live enemies
 
     // Use this for initialization
     void Start()
     {
+        enemies = new GameObject[max_enemies];
         interval = 4.0f;
     }
 
@@ -53,7 +55,9 @@ public class SpawnEnemiesSide : MonoBehaviour
             enemy.GetComponent<EnemyStats>().ec = (EnemyStats.gunColor)colEnemies;
             enemy.GetComponent<Rigidbody>().drag += drag + drag_minor;
             enemy.transform.localScale *= scale;
+            enemy.GetComponent<EnemyStats>().addLifetime(15.0f);
             count++;
+            enemies[i] = enemy.gameObject;
             //begin side specific code
             enemy.GetComponent<Enemy_Move_Twd_Home>().enabled = true;
             enemy.GetComponent<EnemyMovement_Follow>().enabled = false;

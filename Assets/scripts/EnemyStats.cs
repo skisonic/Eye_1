@@ -10,11 +10,13 @@ public class EnemyStats : MonoBehaviour {
     public Material[] spriteMats;
     public gunColor ec; //enemy color
 
-    public GameObject enemy_death_pf;
     const float LIFE_TIME = 15.0f;
     int hp = 1;
     Color start_color;
-    GameObject home;
+
+    public GameObject enemy_death_pf;
+    public GameObject home;
+    public GameObject spawner;
 
     // lerp size as dropping?
     // Use this for initialization
@@ -22,17 +24,17 @@ public class EnemyStats : MonoBehaviour {
     {
         Rigidbody rb;
         SpriteRenderer srend;
-        home = GameObject.Find("Home");
         lifetime = LIFE_TIME;
         rb = GetComponent<Rigidbody>();
         GetComponent<MeshRenderer>().material = gunMats[(int)ec];
+        gameObject.name += "_" + ec.ToString();
         hp *= (int)rb.drag / 2;
         if (hp <= 0)
             hp = 1;
         start_color = GetComponent<Renderer>().material.color;
 
         srend = GetComponentInChildren<SpriteRenderer>();
-        srend.sprite = GameObject.Find("Spawner").GetComponent<SpawnEnemies>().enemySprites[(int)ec];
+        srend.sprite = spawner.GetComponent<SpawnEnemies>().enemySprites[(int)ec];
         //Debug.Log("drag = " + rb.drag + "hp = " + hp);
     }
 
@@ -49,6 +51,11 @@ public class EnemyStats : MonoBehaviour {
         {
             Destroy(gameObject);
         }
+    }
+
+    public void addLifetime(float addLife)
+    {
+        lifetime += addLife;
     }
 
     public void TakeDamage()

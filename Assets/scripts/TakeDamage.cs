@@ -79,7 +79,7 @@ public class TakeDamage : MonoBehaviour {
 
     void OnCollisionEnter(Collision coll)
     {
-        if (coll.gameObject.tag == "Enemy_Cube")
+        if (coll.gameObject.CompareTag("Enemy_Cube"))
         {
             hp--;
         }

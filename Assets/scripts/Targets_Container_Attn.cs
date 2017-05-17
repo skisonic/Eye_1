@@ -12,7 +12,6 @@ public class Targets_Container_Attn : MonoBehaviour {
     float gazeKillTimer; //amoutn of time to gaze at a gazer
     float gazeTolTimer; //timer for gazer without reset
     int clickKillCount; //number of clicks to kill a clicker
-    HandleGazeLL gazeHandler;
 
     const int KILL_CLICK_COUNT = 3; //number of mouesd clicks required to kill a mouser
     const float KILL_GAZE_TIME = 0.75f; // we're using 3/4s rn
@@ -51,7 +50,6 @@ public class Targets_Container_Attn : MonoBehaviour {
     public void Init(int type_in)
     {
         rend = GetComponentInChildren<SpriteRenderer>();
-        gazeHandler = GetComponent<HandleGazeLL>();
         //Debug.Log("initiating. type =  " + type);
 
         if (type_in == 0)

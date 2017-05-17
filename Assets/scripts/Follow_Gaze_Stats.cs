@@ -19,8 +19,10 @@ public class Follow_Gaze_Stats : MonoBehaviour {
     // Use this for initialization
     void Start () {
         gaze_color = gazeColor.none;
-        rend = GetComponent<SpriteRenderer>();
         rends = GetComponentsInChildren<SpriteRenderer>();
+        //Debug.Log("rends size of = " + rends.GetLength(0));
+
+        rend = GetComponent<SpriteRenderer>();
 
         ColorUtility.TryParseHtmlString("#FD2768FF", out redCannonCol);
         ColorUtility.TryParseHtmlString("#71F67AFF", out greenCannonCol);
@@ -76,7 +78,8 @@ public class Follow_Gaze_Stats : MonoBehaviour {
     {
         if (coll.gameObject.CompareTag("ColorChanger"))
         {
-            //Debug.Log("1 triggered a color changer");
+            Debug.Log("1 triggered a color changer");
+            //this is the working one
             CannonStats cs = coll.gameObject.GetComponent<CannonStats>();
             SwitchColor(cs);
         }
@@ -122,7 +125,6 @@ public class Follow_Gaze_Stats : MonoBehaviour {
 
     public void SwitchColor(CannonStats cs) //change target color 
     {
-
         switch (cs.gc)
         {
             case CannonStats.gunColor.red:

@@ -54,7 +54,7 @@ public class AimCannonWithGaze : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate() //SHOULD BE CHANGED TO UPDATE NOT FIXED
+    void Update() 
     {
 
         current_time = Time.time;

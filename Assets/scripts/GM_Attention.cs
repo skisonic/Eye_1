@@ -33,7 +33,7 @@ public class GM_Attention : MonoBehaviour {
     int totalTargets; //total number of targets during round
 
     int round_count; // counter for number of rounds completed (current round)
-    int start_round = 8; //starting round -1
+    int start_round = 0; //starting round -1
 
     bool gameRunning = false; 
 
@@ -52,14 +52,8 @@ public class GM_Attention : MonoBehaviour {
     {        
         Application.targetFrameRate = 30;
 
-        myTimer = GAME_TIME; //time before game over occurs
-        startTime = Time.time;
         totalTargets = 1; //initial value for total number of targets per round
-
-        score = 0;
-        points = 0;
         round_count = start_round; //gets incremented at first NewRound call
-        numTargets = numGazers = numClickers = 0;
 
         target_pf = Resources.Load<GameObject>("prefabs/Attn_Target");
         sphere_pf = Resources.Load<GameObject>("prefabs/Sphere_pf");
@@ -67,8 +61,6 @@ public class GM_Attention : MonoBehaviour {
         rightText = GameObject.Find("Text (1)").GetComponent<Text>();
         timerText = GameObject.Find("Timer").GetComponent<Text>();
         scoreText = GameObject.Find("Score").GetComponent<Text>();
-
-        scoreText.text = score.ToString();
 
         myInit();
         NewRound();
@@ -85,7 +77,19 @@ public class GM_Attention : MonoBehaviour {
         round_count++;
         roundCompleteTime = 0;
         roundStartTime = 0;
+
+
+        myTimer = GAME_TIME; //time before game over occurs
+        startTime = Time.time;
+
+        score = 0;
+        points = 0;
+
         leftText.text = "GAZE";
+        rightText.text = "CLICK";
+        scoreText.text = "0";
+        timerText.text = myTimer.ToString();
+
 
         Debug.Log("NewRound(): round count " + round_count);
         getBoundaries();
@@ -439,10 +443,14 @@ public class GM_Attention : MonoBehaviour {
                 myTimer += 5.0f;
                 Debug.Log("Added 5s to timer. Timer = " + myTimer);
             }
-            if (Input.GetKeyDown(KeyCode.Delete)) //Quick Restart
+            if (Input.GetKeyDown(KeyCode.Delete)) //Quick End Game
             {
                 EndGame();
-                RestartGame();
+            }
+            if (Input.GetKeyDown(KeyCode.Home)) //Quick Restart
+            {
+                EndGame();
+                StartCoroutine("PauseBeforeNewGame");
             }
             if (Input.GetKeyDown(KeyCode.Escape)) //Quick startnewround
             {
@@ -452,10 +460,7 @@ public class GM_Attention : MonoBehaviour {
 
         if (myTimer <= 0 && gameRunning)
         {
-            //end game
-            //EndGame();
-            gameRunning = false;
-            Invoke("EndGame", 1.0f);
+            EndGame();
         }
         else
         {
@@ -510,11 +515,18 @@ public class GM_Attention : MonoBehaviour {
     void EndGame() //Ends the game
     {
         Debug.Log("EndGame(): entered EndGame()");
+        gameRunning = false;
         DestroySpheres();
         StopAllCoroutines();
-        gameRunning = false;
         leftText.text = "GAME";
         rightText.text = "OVER";
+    }
+    
+    IEnumerator PauseBeforeNewGame()
+    {
+        yield return new WaitForSeconds(1.0f);
+        RestartGame();
+        yield return null;
     }
 
     void RestartGame() //Quick Restart Game. Probably needs to be fixed
@@ -522,6 +534,11 @@ public class GM_Attention : MonoBehaviour {
         Debug.Log("RestartGame: restart...");
         StopAllCoroutines();
 
+        round_count = start_round;
+        totalTargets = 1; //initial value for total number of targets per round
+
+
+        /*
         myTimer = GAME_TIME; //game over time
         startTime = Time.time;
 
@@ -532,10 +549,12 @@ public class GM_Attention : MonoBehaviour {
         leftText.text = "GAZE";
         rightText.text = "CLICK";
         scoreText.text = "0";
-
         timerText.text = myTimer.ToString();
+
         PlaceSpheres();
         gameRunning = true;
+        */
+        NewRound();
     }
 
     void getBoundaries()
