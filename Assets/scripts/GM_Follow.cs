@@ -197,6 +197,8 @@ public class GM_Follow : MonoBehaviour
             Destroy(bullet);
         }
         home.GetComponent<Home_Damage_Follow>().score = 0;
+        Debug.Log("this shouldnt be follow");
+
         myTimer = GAMETIME + 1;
         foreach (GameObject cannon in cannons)
         {

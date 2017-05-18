@@ -68,7 +68,20 @@ public class Home_Damage_Follow : MonoBehaviour
         if (coll.gameObject.CompareTag("Enemy_Cube"))
         {
             ReceiveDamage(1);
-            Destroy(coll.gameObject);
+            //Destroy(coll.gameObject.transform.parent.gameObject);
+            //coll.gameObject.transform.parent.gameObject.GetComponent<EnemyStatsTopLevel>().Die();
+            coll.gameObject.GetComponent<EnemyStatsTopLevel>().Die();
+        }
+    }
+
+    void OnTriggerEnter(Collider coll)
+    {
+        if (coll.gameObject.CompareTag("Enemy_Cube"))
+        {
+            ReceiveDamage(1);
+            //Destroy(coll.gameObject.transform.parent.gameObject);
+            //coll.gameObject.transform.parent.gameObject.GetComponent<EnemyStatsTopLevel>().Die();
+            coll.gameObject.GetComponent<EnemyStatsTopLevel>().Die();
         }
     }
 

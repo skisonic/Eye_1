@@ -78,7 +78,7 @@ public class Follow_Gaze_Stats : MonoBehaviour {
     {
         if (coll.gameObject.CompareTag("ColorChanger"))
         {
-            Debug.Log("1 triggered a color changer");
+            //Debug.Log("1 triggered a color changer");
             //this is the working one
             CannonStats cs = coll.gameObject.GetComponent<CannonStats>();
             SwitchColor(cs);

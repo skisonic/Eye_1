@@ -7,13 +7,15 @@ public class EnemyHandleCollisions : MonoBehaviour
 
     // this script increments score right now, should be fixed 
     public GameObject enemy_death_pf;
+
     GameObject home;
-    private EnemyStats stats;
+    private EnemyStatsTopLevel stats;
     // Use this for initialization
     void Start()
     {
         home = GameObject.Find("Home");
-        stats = GetComponent<EnemyStats>();
+        //stats = GetComponent<EnemyStats>();        
+        stats = GetComponent<EnemyStatsTopLevel>();
     }
 
     // Update is called once per frame
@@ -33,6 +35,7 @@ public class EnemyHandleCollisions : MonoBehaviour
             {
                 GameObject death = Instantiate(enemy_death_pf, transform.position, Quaternion.identity) as GameObject;
                 home.GetComponent<TakeDamage>().score++;
+                Debug.Log("this shouldnt be EHCollisions");
                 //Debug.Log("somebody died");
                 Destroy(gameObject);
             }
@@ -46,11 +49,10 @@ public class EnemyHandleCollisions : MonoBehaviour
             if (stats.ec.ToString() == fs.gaze_color.ToString())
             {
                 stats.TakeDamage();
-                /*
-                GameObject death = Instantiate(enemy_death_pf, transform.position, Quaternion.identity) as GameObject;
-                home.GetComponent<TakeDamage>().score++;
-                Destroy(gameObject);
-                */
+                if(stats.returnLife() == 0)
+                {
+                    stats.killed = true;
+                }
             }
         }
         if (coll.gameObject.CompareTag("Floor")) // hits the ground.
@@ -65,19 +67,18 @@ public class EnemyHandleCollisions : MonoBehaviour
     {
         Follow_Gaze_Stats fs = coll.gameObject.GetComponent<Follow_Gaze_Stats>();
 
-        //Debug.Log("3D collision trigger");
+        Debug.Log("3D collision trigger");
 
-        //Debug.Log("stats.ec.Tostring() " + stats.ec + " fs.gaze_color.ToString() " + fs.gaze_color);
+        Debug.Log("stats.ec.Tostring() " + stats.ec + " fs.gaze_color.ToString() " + fs.gaze_color);
 
-        if (GetComponent<EnemyStats>().ec.ToString() == fs.gaze_color.ToString())
+        //if (GetComponent<EnemyStats>().ec.ToString() == fs.gaze_color.ToString())
+        if (stats.ec.ToString() == fs.gaze_color.ToString())
         {
             stats.TakeDamage();
-            /*
-            GameObject death = Instantiate(enemy_death_pf, transform.position, Quaternion.identity) as GameObject;
-            home.GetComponent<TakeDamage>().score++;
-            Debug.Log("somebody died");
-            Destroy(gameObject);
-            */
+            if (stats.returnLife() == 0)
+            {
+                stats.killed = true;
+            }
         }
     }
 }

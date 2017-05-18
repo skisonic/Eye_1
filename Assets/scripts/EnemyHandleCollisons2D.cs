@@ -31,6 +31,7 @@ public class EnemyHandleCollisons2D : MonoBehaviour {
             {
                 GameObject death = Instantiate(enemy_death_pf, transform.position, Quaternion.identity) as GameObject;
                 home.GetComponent<TakeDamage>().score++;
+                Debug.Log("this shouldnt be Enemyhandlecollisisons2d + bullet");
                 //Debug.Log("somebody died");
                 Destroy(gameObject);
             }
@@ -44,6 +45,7 @@ public class EnemyHandleCollisons2D : MonoBehaviour {
             {
                 GameObject death = Instantiate(enemy_death_pf, transform.position, Quaternion.identity) as GameObject;
                 home.GetComponent<TakeDamage>().score++;
+                Debug.Log("this shouldnt be Enemyhandlecollisisons2d gaze");
                 //Debug.Log("EnemHandColl: takedmg");
                 Destroy(gameObject);
             }

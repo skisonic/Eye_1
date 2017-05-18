@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyStats : MonoBehaviour {
+public class EnemyStatsTopLevel : MonoBehaviour
+{
 
     float lifetime;
 
@@ -17,6 +18,8 @@ public class EnemyStats : MonoBehaviour {
     public GameObject enemy_death_pf;
     public GameObject home;
     public GameObject spawner;
+    public bool isDead;
+    public bool killed;
 
     // lerp size as dropping?
     // Use this for initialization
@@ -48,10 +51,31 @@ public class EnemyStats : MonoBehaviour {
         //propogate some of this shit to children.
         Rigidbody[] rbs = GetComponentsInChildren<Rigidbody>();
 
-        foreach(Rigidbody rb in rbs)
+        foreach (Rigidbody rb in rbs)
         {
             rb.drag = GetComponent<Rigidbody>().drag;
         }
+
+        myInit();
+    }
+
+    public void myInit()
+    {
+        SpriteRenderer srend;
+        srend = GetComponentInChildren<SpriteRenderer>();
+
+        isDead = false;
+        killed = false;
+        srend.sprite = spawner.GetComponent<SpawnEnemies>().enemySprites[(int)ec];
+        //based off type:
+        //hp
+        //size
+        //speed
+        //
+        //  enemies[i].GetComponent<Rigidbody>().isKinematic = false;
+        //enemies[i].GetComponent<Rigidbody>().useGravity = false;
+        //enemies[i].GetComponent<Collider>().enabled = true;
+        //sprite rendcolor
     }
 
     // Update is called once per frame
@@ -59,14 +83,18 @@ public class EnemyStats : MonoBehaviour {
     {
         lifetime -= Time.deltaTime;
 
-        if(hp <= 0)
+        if (hp <= 0 && !(isDead))
         {
             Die();
         }
-        if(lifetime <= 0)
+
+        //disabling lifetime for now not necessary.
+        /*
+        if (lifetime <= 0) 
         {
-            Destroy(gameObject);
-        }
+            Die();
+            //Destroy(gameObject);
+        }*/
     }
 
     public void addLifetime(float addLife)
@@ -74,21 +102,40 @@ public class EnemyStats : MonoBehaviour {
         lifetime += addLife;
     }
 
+    public int returnLife()
+    {
+        return hp;
+    }
+
+    public void addHP(int addHP)
+    {
+        hp += addHP;
+    }
+
     public void TakeDamage()
     {
         hp--;
+        Debug.Log("takedamge");
         StopCoroutine(FlashWhite());
         StartCoroutine(FlashWhite());
         //Debug.Log("drag = " + GetComponent<Rigidbody>().drag + "hp = " + hp);
     }
 
-    void Die()
+    public void Die()
     {
+        isDead = true;
+        SpriteRenderer rend = GetComponentInChildren<SpriteRenderer>();
+        Collider coll = GetComponent<Collider>();
         home.GetComponent<Home_Damage_Follow>().score++;
-        Debug.Log("this shouldnt be EnemyStats");
-        Destroy(gameObject);
-
-        GameObject death = Instantiate(enemy_death_pf, transform.position, Quaternion.identity) as GameObject;
+        Debug.Log("Score incremented - EnemyStatsTopLevel");
+        //Destroy(gameObject);
+        //gameObject.SetActive(false);
+        rend.enabled = false;
+        coll.enabled = false;
+        if (killed)
+        {
+            GameObject death = Instantiate(enemy_death_pf, transform.position, Quaternion.identity) as GameObject;
+        }
     }
 
 
